@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+  <title>Topic 15: Time-Marker &amp; Verb Conjugation Lab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* Base typography & mobile Safari optimizations */
+    html, body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      overscroll-behavior-y: none;
+    }
+
+    /* CRITICAL: 16px+ font-size prevents iOS Safari from auto-zooming on input focus */
+    input[type="text"], select, textarea {
+      font-size: 16px !important;
+      line-height: 1.4;
+    }
+
+    /* Safe-area padding for notched iPhones & iPads */
+    .safe-pb {
+      padding-bottom: max(1.25rem, env(safe-area-inset-bottom));
+    }
+    .safe-pt {
+      padding-top: max(1rem, env(safe-area-inset-top));
+    }
+
+    /* Subtle animations for feedback & streak */
+    @keyframes popIn {
+      0% { transform: scale(0.95); opacity: 0; }
+      70% { transform: scale(1.02); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+    .animate-pop {
+      animation: popIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .animate-shake {
+      animation: shake 0.35s ease-in-out;
+    }
+
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col selection:bg-sky-200 selection:text-sky-950">
+
+  <!-- TOP NAVIGATION BAR -->
+  <header class="sticky top-0 z-30 bg-slate-900 text-white shadow-md safe-pt">
+    <div class="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between gap-2">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div class="w-9 h-9 rounded-xl bg-sky-500/20 border border-sky-400/40 flex items-center justify-center shrink-0">
+          <svg class="w-5 h-5 text-sky-400" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2m6-2a10 10 0 11-20 0 10 10 0 0120 0z" />
+          </svg>
+        </div>
+        <div class="truncate">
+          <p class="text-[11px] font-bold uppercase tracking-wider text-sky-400 leading-none">Topic 15 • Final Review</p>
+          <h1 class="text-sm sm:text-base font-extrabold text-white truncate">Time-Marker &amp; Verb Lab</h1>
+        </div>
+      </div>
+
+      <!-- Cheat-Sheet Quick Trigger -->
+      <button
+        id="btnToggleCheatSheet"
+        type="button"
+        class="shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 border border-slate-700 text-xs sm:text-sm font-semibold text-sky-300 transition"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        </svg>
+        <span>Rules</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- COLLAPSIBLE REFERENCE CHEAT-SHEET DRAWER -->
+  <section id="cheatSheetDrawer" class="hidden bg-slate-900 text-slate-100 border-b border-slate-800 shadow-xl">
+    <div class="max-w-2xl mx-auto px-4 py-4 space-y-3 animate-pop">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xs font-extrabold uppercase tracking-wider text-sky-400">Grammar &amp; Time-Marker Cheat-Sheet</h2>
+        <button id="btnCloseCheatSheet" type="button" class="text-xs font-semibold text-slate-400 hover:text-white px-2 py-1 rounded-lg bg-slate-800">
+          Close ✕
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+        <!-- Present Perfect -->
+        <div class="bg-slate-800/90 border border-sky-500/30 rounded-xl p-3">
+          <p class="font-extrabold text-sky-400 text-sm mb-1">1. Present Perfect</p>
+          <p class="mono text-[11px] bg-slate-950/60 px-2 py-1 rounded-md text-sky-200 mb-1.5">have / has + Past Participle</p>
+          <p class="text-slate-300 leading-snug mb-1.5">Unfinished time, life experiences, or past actions connected to <b>now</b>.</p>
+          <p class="text-[11px] text-slate-400"><span class="text-sky-300 font-semibold">Markers:</span> already, yet, just, ever, never, since, for, twice, three times.</p>
+        </div>
+
+        <!-- Simple Past -->
+        <div class="bg-slate-800/90 border border-amber-500/30 rounded-xl p-3">
+          <p class="font-extrabold text-amber-400 text-sm mb-1">2. Simple Past</p>
+          <p class="mono text-[11px] bg-slate-950/60 px-2 py-1 rounded-md text-amber-200 mb-1.5">Verb-ed / Irregular V2</p>
+          <p class="text-slate-300 leading-snug mb-1.5">Completed actions at a <b>closed, specific time</b> in the past.</p>
+          <p class="text-[11px] text-slate-400"><span class="text-amber-300 font-semibold">Markers:</span> yesterday, last week/month, ... ago, when I was..., in 2018.</p>
+        </div>
+
+        <!-- Present Continuous -->
+        <div class="bg-slate-800/90 border border-emerald-500/30 rounded-xl p-3">
+          <p class="font-extrabold text-emerald-400 text-sm mb-1">3. Present Continuous</p>
+          <p class="mono text-[11px] bg-slate-950/60 px-2 py-1 rounded-md text-emerald-200 mb-1.5">am / is / are + Verb-ing</p>
+          <p class="text-slate-300 leading-snug mb-1.5">Actions happening <b>right at this exact moment</b>.</p>
+          <p class="text-[11px] text-slate-400"><span class="text-emerald-300 font-semibold">Markers:</span> right now, at the moment, Look!, Be quiet!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="flex-1 w-full max-w-2xl mx-auto px-4 py-5 sm:py-8 flex flex-col justify-center safe-pb">
+
+    <!-- ========================================================= -->
+    <!-- SCREEN 1: START & STUDENT IDENTIFICATION                  -->
+    <!-- ========================================================= -->
+    <section id="screenStart" class="bg-white rounded-3xl shadow-sm border border-slate-200/90 p-5 sm:p-8 space-y-6 animate-pop">
+      <div class="space-y-2">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-50 text-sky-700 border border-sky-200 text-xs font-bold">
+          🎯 Active Recall • 15 Questions
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+          Master Verb Conjugation &amp; Time Markers
+        </h2>
+        <p class="text-sm sm:text-base text-slate-600 leading-relaxed">
+          Scan every sentence for its <b>Time Signal Word</b>, type the exact conjugated verb form, and get instant diagnostic feedback before your final exam.
+        </p>
+      </div>
+
+      <!-- Inline Quick Preview of the 3 Rules -->
+      <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200/80 space-y-2.5">
+        <div class="flex items-center justify-between">
+          <p class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Quick Reference Guide</p>
+          <button type="button" id="btnOpenRulesFromStart" class="text-xs font-bold text-sky-600 hover:text-sky-700 underline">
+            Expand full table
+          </button>
+        </div>
+        <ul class="space-y-1.5 text-xs sm:text-sm text-slate-700">
+          <li class="flex items-start gap-2">
+            <span class="w-2 h-2 rounded-full bg-sky-500 mt-1.5 shrink-0"></span>
+            <span><b class="text-slate-900">Present Perfect</b> (<span class="mono text-xs text-sky-700">have/has + V3</span>): <i>already, yet, just, ever, never, since, for</i></span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="w-2 h-2 rounded-full bg-amber-500 mt-1.5 shrink-0"></span>
+            <span><b class="text-slate-900">Simple Past</b> (<span class="mono text-xs text-amber-700">V2</span>): <i>yesterday, last week/month, ago, when I was...</i></span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 mt-1.5 shrink-0"></span>
+            <span><b class="text-slate-900">Present Continuous</b> (<span class="mono text-xs text-emerald-700">am/is/are + V-ing</span>): <i>right now, at the moment</i></span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Student Login Form -->
+      <form id="startForm" class="space-y-4" novalidate>
+        <div>
+          <label for="inputFullName" class="block text-sm font-bold text-slate-800 mb-1.5">
+            Full Name <span class="text-rose-600">*</span>
+          </label>
+          <input
+            id="inputFullName"
+            type="text"
+            required
+            placeholder="e.g., Valeria Mendoza López"
+            autocomplete="name"
+            class="w-full px-4 py-3.5 rounded-2xl border-2 border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-sky-500 transition"
+          />
+          <p id="nameErrorMsg" class="hidden text-xs font-semibold text-rose-600 mt-1.5">
+            Please enter your full name so it appears on your Verified Score Receipt.
+          </p>
+        </div>
+
+        <div>
+          <label for="inputGroup" class="block text-sm font-bold text-slate-800 mb-1.5">
+            Group / Team ID <span class="text-slate-400 font-normal">(Optional)</span>
+          </label>
+          <input
+            id="inputGroup"
+            type="text"
+            placeholder="e.g., Group 204 or Team 3"
+            class="w-full px-4 py-3.5 rounded-2xl border-2 border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-sky-500 transition"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="w-full py-4 px-6 rounded-2xl bg-sky-600 hover:bg-sky-700 active:scale-[0.99] text-white font-extrabold text-base shadow-md shadow-sky-600/20 transition flex items-center justify-center gap-2"
+        >
+          <span>Start 15-Question Lab</span>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </button>
+      </form>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- SCREEN 2: INTERACTIVE PRACTICE LAB                        -->
+    <!-- ========================================================= -->
+    <section id="screenQuiz" class="hidden space-y-4">
+      <!-- Progress & Streak Header -->
+      <div class="bg-white rounded-2xl p-3.5 sm:p-4 border border-slate-200/90 shadow-sm space-y-2.5">
+        <div class="flex items-center justify-between text-xs sm:text-sm font-bold">
+          <div class="flex items-center gap-2">
+            <span id="progressLabel" class="text-slate-800">Question 1 of 15</span>
+            <span id="retryBadge" class="hidden px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[11px] font-extrabold">
+              Missed Verbs Review
+            </span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span id="streakBadge" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-orange-50 text-orange-700 border border-orange-200 text-xs font-extrabold transition-transform">
+              🔥 Streak: <span id="streakCount">0</span>
+            </span>
+            <span class="text-slate-500 font-semibold">
+              Pts: <span id="liveScoreCount" class="text-slate-900 font-extrabold">0</span>
+            </span>
+          </div>
+        </div>
+        <!-- Progress Bar -->
+        <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+          <div id="progressBar" class="h-full bg-sky-500 rounded-full transition-all duration-300" style="width: 6.66%"></div>
+        </div>
+      </div>
+
+      <!-- Main Question Card -->
+      <div id="questionCard" class="bg-white rounded-3xl p-5 sm:p-7 border border-slate-200/90 shadow-sm space-y-5">
+        <!-- Top Row: Question Tag & Radar Hint Button -->
+        <div class="flex items-center justify-between gap-2">
+          <span id="questionCategoryTag" class="px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-bold">
+            Conjugation Challenge
+          </span>
+          <button
+            id="btnRadarHint"
+            type="button"
+            class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 active:scale-95 border border-amber-200 text-amber-800 text-xs font-extrabold transition"
+          >
+            <span>📡 Radar Hint</span>
+          </button>
+        </div>
+
+        <!-- Sentence Prompt Display -->
+        <div class="bg-slate-50/90 rounded-2xl p-4 sm:p-5 border border-slate-200/70">
+          <p id="sentenceDisplay" class="text-lg sm:text-xl font-semibold text-slate-900 leading-relaxed">
+            <!-- Dynamically populated -->
+          </p>
+          <p id="radarHintBox" class="hidden mt-3 pt-3 border-t border-amber-200/80 text-xs sm:text-sm text-amber-900 font-medium flex items-start gap-2 animate-pop">
+            <span class="shrink-0">💡</span>
+            <span id="radarHintText"></span>
+          </p>
+        </div>
+
+        <!-- Input Area (Supports 1-blank or 2-blank questions cleanly on mobile) -->
+        <form id="answerForm" class="space-y-4" novalidate>
+          <!-- Single Blank Input -->
+          <div id="singleInputWrapper">
+            <label for="inputAnswer1" class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
+              Type the exact conjugated verb:
+            </label>
+            <input
+              id="inputAnswer1"
+              type="text"
+              autocorrect="off"
+              autocapitalize="none"
+              spellcheck="false"
+              autocomplete="off"
+              placeholder="Type your answer here..."
+              class="w-full px-4 py-3.5 rounded-2xl border-2 border-slate-300 bg-white text-slate-900 font-semibold placeholder:text-slate-400 placeholder:font-normal focus:outline-none focus:border-sky-500 transition"
+            />
+          </div>
+
+          <!-- Dual Blank Inputs (For Questions like: _____ you ever _____ (fly)...) -->
+          <div id="dualInputWrapper" class="hidden grid grid-cols-2 gap-3">
+            <div>
+              <label for="inputDual1" class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
+                Blank 1 (Auxiliary)
+              </label>
+              <input
+                id="inputDual1"
+                type="text"
+                autocorrect="off"
+                autocapitalize="none"
+                spellcheck="false"
+                autocomplete="off"
+                placeholder="e.g., Have / Has"
+                class="w-full px-3.5 py-3.5 rounded-2xl border-2 border-slate-300 bg-white text-slate-900 font-semibold placeholder:text-slate-400 placeholder:font-normal focus:outline-none focus:border-sky-500 transition"
+              />
+            </div>
+            <div>
+              <label for="inputDual2" class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
+                Blank 2 (Participle)
+              </label>
+              <input
+                id="inputDual2"
+                type="text"
+                autocorrect="off"
+                autocapitalize="none"
+                spellcheck="false"
+                autocomplete="off"
+                placeholder="Past participle"
+                class="w-full px-3.5 py-3.5 rounded-2xl border-2 border-slate-300 bg-white text-slate-900 font-semibold placeholder:text-slate-400 placeholder:font-normal focus:outline-none focus:border-sky-500 transition"
+              />
+            </div>
+          </div>
+
+          <p id="emptyInputWarning" class="hidden text-xs font-semibold text-rose-600">
+            Please type your verb conjugation before checking.
+          </p>
+
+          <!-- Primary Submit Button -->
+          <button
+            id="btnCheckAnswer"
+            type="submit"
+            class="w-full py-4 px-6 rounded-2xl bg-slate-900 hover:bg-slate-800 active:scale-[0.99] text-white font-extrabold text-base shadow-sm transition"
+          >
+            Check Answer
+          </button>
+        </form>
+
+        <!-- Diagnostic Pedagogical Feedback Panel -->
+        <div id="feedbackPanel" class="hidden rounded-2xl p-4 sm:p-5 border-2 space-y-3 animate-pop">
+          <div class="flex items-start gap-3">
+            <div id="feedbackIcon" class="w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-base font-extrabold">
+              ✓
+            </div>
+            <div class="space-y-1 flex-1 min-w-0">
+              <h3 id="feedbackTitle" class="text-base font-extrabold"></h3>
+              <p id="feedbackBody" class="text-xs sm:text-sm leading-relaxed"></p>
+              <div id="correctAnswerReveal" class="hidden pt-1.5">
+                <span class="inline-block px-3 py-1 rounded-lg bg-white/80 border border-slate-300 text-xs sm:text-sm font-bold text-slate-900">
+                  Correct form: <span id="correctAnswerText" class="mono text-emerald-700"></span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons inside Feedback Panel -->
+          <div id="feedbackActions" class="pt-1 flex flex-col sm:flex-row gap-2.5">
+            <button
+              id="btnTryOnceMore"
+              type="button"
+              class="hidden flex-1 py-3 px-4 rounded-xl bg-amber-600 hover:bg-amber-700 active:scale-[0.99] text-white font-extrabold text-sm transition"
+            >
+              ↺ Try Once More (Half-Credit)
+            </button>
+            <button
+              id="btnNextQuestion"
+              type="button"
+              class="flex-1 py-3.5 px-5 rounded-xl bg-slate-900 hover:bg-slate-800 active:scale-[0.99] text-white font-extrabold text-sm transition"
+            >
+              Continue →
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- SCREEN 3: VERIFIED SCORE RECEIPT                          -->
+    <!-- ========================================================= -->
+    <section id="screenReceipt" class="hidden space-y-5 animate-pop">
+      <!-- Tamper-Evident Receipt Card -->
+      <div id="receiptCard" class="bg-white rounded-3xl border-2 border-slate-900 shadow-lg overflow-hidden">
+        <!-- Dark Top Banner -->
+        <div class="bg-slate-900 text-white px-5 py-4 sm:px-7 sm:py-5 flex items-center justify-between gap-3">
+          <div>
+            <p class="text-[11px] font-bold uppercase tracking-widest text-sky-400">Official Lab Completion</p>
+            <h2 class="text-lg sm:text-xl font-extrabold tracking-tight">Verified Score Receipt</h2>
+          </div>
+          <div class="px-3 py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-xs font-extrabold flex items-center gap-1.5">
+            <span>✓ VERIFIED</span>
+          </div>
+        </div>
+
+        <div class="p-5 sm:p-7 space-y-5">
+          <!-- Student Identity & Timestamp -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-50 rounded-2xl p-4 border border-slate-200/80 text-sm">
+            <div>
+              <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Student Name</p>
+              <p id="receiptName" class="font-extrabold text-slate-900 text-base break-words">—</p>
+            </div>
+            <div>
+              <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Group / Team</p>
+              <p id="receiptGroup" class="font-bold text-slate-700">—</p>
+            </div>
+            <div class="sm:col-span-2 pt-2 border-t border-slate-200/70 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500">
+              <span>Completed: <strong id="receiptTimestamp" class="text-slate-700">—</strong></span>
+              <span class="mono text-[11px] bg-slate-200/70 px-2 py-0.5 rounded text-slate-700" id="receiptCode">ID: #T15-0000</span>
+            </div>
+          </div>
+
+          <!-- Big Score Hero & Best Streak -->
+          <div class="flex items-center justify-between gap-4 bg-sky-50/80 border border-sky-200 rounded-2xl p-4 sm:p-5">
+            <div>
+              <p class="text-xs font-extrabold uppercase tracking-wider text-sky-700">Final Score</p>
+              <div class="flex items-baseline gap-2.5 mt-0.5">
+                <span id="receiptScoreFraction" class="text-3xl sm:text-4xl font-black text-slate-900">15 / 15</span>
+                <span id="receiptScorePercent" class="text-lg sm:text-xl font-extrabold text-sky-600">(100%)</span>
+              </div>
+            </div>
+            <div class="text-right bg-white px-3.5 py-2.5 rounded-xl border border-sky-200/80 shadow-xs">
+              <p class="text-[11px] font-bold uppercase text-slate-400">Best Streak</p>
+              <p id="receiptBestStreak" class="text-lg sm:text-xl font-extrabold text-orange-600">🔥 0</p>
+            </div>
+          </div>
+
+          <!-- Accuracy Breakdown by Tense -->
+          <div class="space-y-2.5">
+            <p class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Accuracy Breakdown by Tense</p>
+            <div class="grid grid-cols-3 gap-2.5 text-center">
+              <div class="bg-slate-50 rounded-2xl p-3 border border-slate-200/80">
+                <p class="text-[11px] font-bold text-sky-700 leading-tight">Present Perfect</p>
+                <p id="statPP" class="text-lg sm:text-xl font-black text-slate-900 mt-1">100%</p>
+                <p id="statPPDetail" class="text-[11px] text-slate-500">8/8 pts</p>
+              </div>
+              <div class="bg-slate-50 rounded-2xl p-3 border border-slate-200/80">
+                <p class="text-[11px] font-bold text-amber-700 leading-tight">Simple Past</p>
+                <p id="statSP" class="text-lg sm:text-xl font-black text-slate-900 mt-1">100%</p>
+                <p id="statSPDetail" class="text-[11px] text-slate-500">4/4 pts</p>
+              </div>
+              <div class="bg-slate-50 rounded-2xl p-3 border border-slate-200/80">
+                <p class="text-[11px] font-bold text-emerald-700 leading-tight">Pres. Continuous</p>
+                <p id="statPC" class="text-lg sm:text-xl font-black text-slate-900 mt-1">100%</p>
+                <p id="statPCDetail" class="text-[11px] text-slate-500">3/3 pts</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Missed Verbs Review List -->
+          <div id="missedSection" class="space-y-2">
+            <p class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Verbs to Review Before Final Exam</p>
+            <div id="missedListContainer" class="space-y-2">
+              <!-- Populated dynamically -->
+            </div>
+          </div>
+
+          <!-- Screenshot Prompt -->
+          <div class="bg-amber-50 border border-amber-300 rounded-2xl p-3.5 flex items-start gap-2.5 text-xs sm:text-sm text-amber-950">
+            <span class="text-base shrink-0">📸</span>
+            <p class="font-semibold leading-snug">
+              Take a screenshot of this card and upload it to your class platform.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Post-Completion Controls -->
+      <div class="flex flex-col sm:flex-row gap-3">
+        <button
+          id="btnCopySummary"
+          type="button"
+          class="flex-1 py-3.5 px-5 rounded-2xl bg-slate-900 hover:bg-slate-800 active:scale-[0.99] text-white font-extrabold text-sm shadow-sm transition flex items-center justify-center gap-2"
+        >
+          <span id="copyBtnText">📋 Copy Results Summary</span>
+        </button>
+        <button
+          id="btnPracticeMissed"
+          type="button"
+          class="hidden flex-1 py-3.5 px-5 rounded-2xl bg-sky-600 hover:bg-sky-700 active:scale-[0.99] text-white font-extrabold text-sm shadow-sm transition"
+        >
+          🎯 Practice Missed Verbs Only
+        </button>
+        <button
+          id="btnRestartFull"
+          type="button"
+          class="py-3.5 px-5 rounded-2xl bg-white hover:bg-slate-100 active:scale-[0.99] border border-slate-300 text-slate-700 font-bold text-sm transition"
+        >
+          Restart Lab
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    /**
+     * TOPIC 15: TIME-MARKER & VERB CONJUGATION LAB
+     * Complete self-contained pedagogical engine with diagnostic error detection.
+     */
+    const QUESTIONS_BANK = [
+      {
+        id: 1,
+        tense: 'SP',
+        tenseName: 'Simple Past',
+        dual: false,
+        promptBefore: 'My brother ',
+        verbCue: '(write)',
+        promptAfter: ' three songs last month.',
+        markerPhrase: 'last month',
+        hint: 'Scan the end of the sentence: "last month" is a closed, finished time period in the past.',
+        accepted: ['wrote'],
+        displayAnswer: 'wrote',
+        ruleExplanation: 'Use Simple Past ("wrote") because "last month" is a finished time period with no connection to now.',
+        diagnose: (raw) => {
+          const val = normalize(raw);
+          if (val.includes('have written') || val.includes('has written')) {
+            return 'Watch the Time Marker! "last month" is a finished past time, so we cannot use Present Perfect. Use Simple Past.';
+          }
+          if (val === 'writed') {
+            return '"Write" is an irregular verb! Its Simple Past form is not "writed"—think of the irregular past form.';
+          }
+          if (val === 'written') {
+            return '"Written" is the Past Participle (used after have/has). For Simple Past alone, use the V2 form.';
+          }
+          return null;
+        }
+      },
+      {
+        id: 2,
+        tense: 'PP',
+        tenseName: 'Present Perfect',
+        dual: false,
+        promptBefore: 'Sofia ',
+        verbCue: '(finish)',
+        promptAfter: ' her final report already.',
+        markerPhrase: 'already',
+        hint: 'Look at "already" + the singular subject "Sofia" (she). Which auxiliary does 3rd-person singular take?',
+        accepted: ['has finished', "'s finished"],
+        displayAnswer: 'has finished',
+        ruleExplanation: '"Already" signals a completed action connected to now, and 3rd-person singular "Sofia" requires "has" + Past Participle.',
+        diagnose: (raw) => {
+          const val = normalize(raw);
+          if (val === 'have finished' || val === "'ve finished") {
+            return 'Almost! Check the subject: "Sofia" is 3rd-person singular (she), so use "has" instead of "have".';
+          }
+          if (val === 'finished') {
+            return '"Already" connects this action to the present! Include the auxiliary "has" before the past participle.';
+          }
+          return null;
+        }
+      },
+      {
+        id: 3,
+        tense: 'PC',
+        tenseName: 'Present Continuous',
+        dual: false,
+        promptBefore: 'Be quiet! We ',
+        verbCue: '(study)',
+        promptAfter: ' for our final exam right now.',
+        markerPhrase: 'right now',
+        hint: 'Notice "Be quiet!" and "right now"—the action is happening at this exact second.',
+        accepted: ['are studying', "'re studying"],
+        displayAnswer: 'are studying',
+        ruleExplanation: '"Right now" indicates an action in progress at this moment, requiring Present Continuous ("are studying").',
+        diagnose: (raw) => {
+          const val = normalize(raw);
+          if (val === 'study' || val === 'studying') {
+            return 'Remember the full Present Continuous formula for "We": auxiliary "are" + verb-ing.';
+          }
+          if (val === 'is studying' || val === 'am studying') {
+            return 'Check subject-verb agreement: "We" takes the plural auxiliary "are".';
+          }
+          return null;
+        }
+      },
+      {
+        id: 4,
+        tense: 'PP',
+        tenseName: 'Present Perfect',
+        dual: true,
+        promptBefore: '',
+        promptMiddle: ' you ever ',
+        verbCue: '(fly)',
+        promptAfter: ' in a helicopter?',
+        markerPhrase: 'ever',
+        hint: 'This is a life-experience question with "ever" and subject "you". Remember: fly → flew → ???',
+        acceptedDual: [
+          ['have'],
+          ['flown']
+        ],
+        displayAnswer: 'Have ... flown',
+        ruleExplanation: 'Life-experience questions with "ever" use Present Perfect: "Have" (for "you") + irregular Past Participle "flown".',
+        diagnoseDual: (raw1, raw2) => {
+          const v1 = normalize(raw1);
+          const v2 = normalize(raw2);
+          if (v1 === 'has') {
+            return 'Check the subject "you": questions with "you" use "Have", not "Has".';
+          }
+          if (v1 === 'did') {
+            return 'With "ever" asking about life experience up to now, use Present Perfect ("Have"), not "Did".';
+          }
+          if (v2 === 'flew' || v2 === 'flied' || v2 === 'fly') {
+            return 'Check Blank 2: "flew" is Simple Past. After "Have", you need the irregular Past Participle of "fly".';
+          }
+          return null;
+        }
+      },
+      {
+        id: 5,
+        tense: 'PP',
+        tenseName: 'Present Perfect',
+        dual: false,
+        promptBefore: 'Our teacher ',
+        verbCue: '(work)',
+        promptAfter: ' at this university since 2019.',
+        markerPhrase: 'since 2019',
+        hint: '"Since 2019" shows an action that started in the past and continues into the present.',
+        accepted: ['has worked', "'s worked"],
+        displayAnswer: 'has worked',
+        ruleExplanation: '"Since 2019" connects a past starting point to the present, requiring Present Perfect ("has worked").',
+        diagnose: (raw) => {
+          const val = normalize(raw);
+          if (val === 'have worked' || val === "'ve worked") {
+            return 'Subject check: "Our teacher" is singular (he/she), so use "has" instead of "have".';
+          }
+          if (val === 'worked') {
+            return '"Since 2019" means the teacher still works here today! Use Present Perfect ("has worked"), not Simple Past.';
+          }
+          return null;
+        }
+      },
+      {
+        id: 6,
+        tense: 'SP',
+        tenseName: 'Simple Past',
+        dual: false,
+        promptBefore: 'They ',
+        verbCue: '(go)',
+        promptAfter: ' to the beach with their cousins yesterday.',
+        markerPhrase: 'yesterday',
+        hint: '"Yesterday" is a completely finished day in the past. What is the Simple Past of "go"?',
+        accepted: ['went'],
+        displayAnswer: 'went',
+        ruleExplanation: '"Yesterday" requires Simple Past, and the irregular Simple Past of "go" is "went".',
+        diagnose: (raw) => {
+          const val = normalize(raw);
+          if (val.includes('have gone') || val.includes('have been')) {
+            return 'Never mix Present Perfect with "yesterday"! Finished time markers require Simple Past.';
+          }
+          if (val === 'gone' || val === 'goed') {
+            return 'Use the Simple Past (V2) form of "go" (not the past participle "gone").';
+          }
+          return null;
+        }
+      },
+      {
+        id: 7,
+        tense: 'PP',
+        tenseName: 'Present Perfect',
+        dual: false,
+        promptBefore: 'I ',
+        verbCue: '(not / eat)',
+        promptAfter: ' sushi yet, so I want to try it tonight.',
+        markerPhrase: 'yet',
+        hint: '"Yet" at the end of a negative sentence signals Present Perfect negative + irregular participle of "eat".',
+        accepted: ["haven't eaten", 'have not eaten'],
+        displayAnswer: "haven't eaten",
+        ruleExplanation: 'Negative sentences with "yet" use Present Perfect ("haven\'t eaten") because the experience hasn\'t happened up to now.',
+        diagnose: (raw) => {
+          const val = normalize(raw);
+          if (val.includes("hasn't") || val.includes('has not')) {
+            return 'Check the subject "I": first-person singular uses "haven\'t" (have not), not "hasn\'t".';
+          }
+          if (val.includes('ate') || val.includes('eat')) {
+            return 'Check the main verb: after "haven\'t", use the irregular Past Participle of "eat" (eat → ate → ???).';
+          }
+          if (val.includes("didn't")) {
+            return '"Yet" signals an unfinished timeline up to now—use Present Perfect ("haven\'t eaten") instead of Simple Past.';
+          }
+          return null;
+        }
+      },
+      {
+        id: 8,
+        tense: 'PC',
+        tenseName: 'Present Continuous',
+        dual: false,
+        promptBefore: 'Look out the window—it ',
+        verbCue: '(rain)',
+        promptAfter: ' heavily at the moment.',
+        markerPhrase: 'at the moment',
+        hint: '"Look out the window" and "at the moment" tell us this is happening right now.',
+        accepted: ['is raining', "'s raining"],
+        displayAnswer: 'is raining',
+        ruleExplanation: '"At the moment" describes an ongoing action happening right now, using Present Continuous ("is raining").',
+        diagnose: (raw) => {
+          const val = normalize(raw);
+          if (val === 'rains' || val === 'raining') {
+            return 'Include the auxiliary "is" + "-ing" for Present Continuous with "it".';
+          }
+          return null;
+        }
+      },
+      {
+        id: 9,
+        tense: 'PP',
+        tenseName: 'Present Perfect',
+        dual: false,
+        promptBefore: 'Carlos and Ana ',
+        verbCue: '(be)',
+        promptAfter: ' to Guanajuato three times.',
+        markerPhrase: 'three times',
+        hint: 'Repeated life experiences ("three times") with a plural subject ("Carlos and Ana" = they).',
+        accepted: ['have been', "'ve been"],
+        displayAnswer: 'have been',
+        ruleExplanation: 'Repeated life experiences up to now use Present Perfect, and plural "Carlos and Ana" takes "have been".',
+        diagnose: (raw) => {
+          const val = normalize(raw);
+          if (val === 'has been' || val === "'s been") {
+            return 'Careful with the compound subject! "Carlos and Ana" = "They" (plural), so use "have" instead of "has".';
+          }
+          if (val === 'were' || val === 'was') {
+            return '"Three times" (without a closed past date) describes life experience up to now—use Present Perfect ("have been").';
+          }
+          return null;
+        }
+      },
+      {
+        id: 10,
+        tense: 'SP',
+        tenseName: 'Simple Past',
+        dual: false,
+        promptBefore: 'When I was ten years old, I ',
+        verbCue: '(break)',
+        promptAfter: ' my left arm.',
+        markerPhrase: 'When I was ten years old',
+        hint: '"When I was ten years old" places the event in a finished childhood period.',
+        accepted: ['broke'],
+        displayAnswer: 'broke',
+        ruleExplanation: '"When I was ten years old" refers to a finished time in the past, requiring Simple Past ("broke").',
+        diagnose: (raw) => {
+          const val = normalize(raw);
+          if (val === 'broken') {
+            return '"Broken" is the Past Participle. For Simple Past alone, use the V2 form of "break".';
+          }
+          if (val.includes('have broken')) {
+            return '"When I was ten years old" is a finished time clause—use Simple Past ("broke"), not Present Perfect.';
+          }
+          return null;
+        }
+      },
+      {
+        id: 11,
+        tense: 'PP',
+        tenseName: 'Present Perfect',
+        dual: false,
+        promptBefore: 'She ',
+        verbCue: '(just / buy)',
+        promptAfter: ' a new laptop for her classes.',
+        markerPhrase: 'just',
+        hint: 'Place "just" right between the 3rd-person auxiliary ("has") and the Past Participle of "buy".',
+        accepted: ['has just bought', "'s just bought"],
+        displayAnswer: 'has just bought',
+        ruleExplanation: '"Just" goes between "has" and the irregular Past Participle "bought" to show a very recent action.',
+        diagnose: (raw) => {
+          const val = normalize(raw);
+          if (val === 'just bought') {
+            return 'Include the auxiliary "has" before "just" to form the Present Perfect!';
+          }
+          if (val.includes('have just')) {
+            return 'Check the subject "She": 3rd-person singular requires "has", not "have".';
+          }
+          if (val.includes('buyed')) {
+            return '"Buy" is irregular! Its past participle is spelled "bought" (not "buyed").';
+          }
+          return null;
+        }
+      },
+      {
+        id: 12,
+        tense: 'PP',
+        tenseName: 'Present Perfect',
+        dual: true,
+        promptBefore: '',
+        promptMiddle: ' your sister ',
+        verbCue: '(speak)',
+        promptAfter: ' to the coordinator yet?',
+        markerPhrase: 'yet',
+        hint: 'Question with "yet" + singular subject "your sister" (she). Irregular verb: speak → spoke → ???',
+        acceptedDual: [
+          ['has'],
+          ['spoken']
+        ],
+        displayAnswer: 'Has ... spoken',
+        ruleExplanation: 'Questions with "yet" use Present Perfect: "Has" (for 3rd-person "your sister") + Past Participle "spoken".',
+        diagnoseDual: (raw1, raw2) => {
+          const v1 = normalize(raw1);
+          const v2 = normalize(raw2);
+          if (v1 === 'have') {
+            return 'Subject check: "your sister" is 3rd-person singular (she), so start the question with "Has".';
+          }
+          if (v1 === 'did') {
+            return '"Yet" signals Present Perfect, not Simple Past ("Did").';
+          }
+          if (v2 === 'spoke' || v2 === 'speak' || v2 === 'speaked') {
+            return 'Check Blank 2: "spoke" is Simple Past. After "Has", use the irregular Past Participle of "speak".';
+          }
+          return null;
+        }
+      },
+      {
+        id: 13,
+        tense: 'SP',
+        tenseName: 'Simple Past',
+        dual: false,
+        promptBefore: 'We ',
+        verbCue: '(watch)',
+        promptAfter: ' a great sci-fi movie two nights ago.',
+        markerPhrase: 'two nights ago',
+        hint: '"Two nights ago" tells us the exact finished time in the past.',
+        accepted: ['watched'],
+        displayAnswer: 'watched',
+        ruleExplanation: '"Two nights ago" is a finished time marker, so we use regular Simple Past ("watched").',
+        diagnose: (raw) => {
+          const val = normalize(raw);
+          if (val.includes('have watched')) {
+            return 'Watch out for "ago"! Phrases with "ago" always mark a finished past time and require Simple Past.';
+          }
+          return null;
+        }
+      },
+      {
+        id: 14,
+        tense: 'PP',
+        tenseName: 'Present Perfect',
+        dual: false,
+        promptBefore: 'He ',
+        verbCue: '(never / see)',
+        promptAfter: ' a wild snake in real life.',
+        markerPhrase: 'never',
+        hint: 'Put "never" between the 3rd-person auxiliary ("has") and the Past Participle of "see" (see → saw → ???).',
+        accepted: ['has never seen', "'s never seen"],
+        displayAnswer: 'has never seen',
+        ruleExplanation: '"Never" goes between "has" and the irregular Past Participle "seen" to describe life experience up to now.',
+        diagnose: (raw) => {
+          const val = normalize(raw);
+          if (val.includes('have never')) {
+            return 'Check the subject "He": 3rd-person singular takes "has", not "have".';
+          }
+          if (val.includes('saw')) {
+            return '"Saw" is Simple Past. After "has never", use the Past Participle of "see" (see → saw → ???).';
+          }
+          if (val === 'never saw') {
+            return 'For life experiences up to now with "never", use Present Perfect ("has never seen").';
+          }
+          return null;
+        }
+      },
+      {
+        id: 15,
+        tense: 'PC',
+        tenseName: 'Present Continuous',
+        dual: false,
+        promptBefore: 'Right now, the students ',
+        verbCue: '(take)',
+        promptAfter: ' notes on the grammar rules.',
+        markerPhrase: 'Right now',
+        hint: '"Right now" + plural subject "the students". Drop the silent "-e" in "take" before adding "-ing"!',
+        accepted: ['are taking', "'re taking"],
+        displayAnswer: 'are taking',
+        ruleExplanation: '"Right now" requires Present Continuous, and "take" drops its final "-e" to become "are taking".',
+        diagnose: (raw) => {
+          const val = normalize(raw);
+          if (val === 'are takeing' || val === 'takeing') {
+            return 'Spelling tip: Drop the silent final "-e" in "take" before adding "-ing"!';
+          }
+          if (val === 'is taking') {
+            return 'Check the subject: "the students" is plural (they), so use "are" instead of "is".';
+          }
+          return null;
+        }
+      }
+    ];
+
+    /* ---------------------------------------------------------
+       APP STATE
+    --------------------------------------------------------- */
+    let studentName = '';
+    let studentGroup = '';
+    let activeQuestions = [];
+    let currentIndex = 0;
+    let attemptCount = 0;
+    let totalPoints = 0;
+    let currentStreak = 0;
+    let bestStreak = 0;
+    let isMissedOnlyMode = false;
+
+    // Detailed tracking per question ID
+    let resultsMap = {}; // { [id]: { question, earnedPoints, userAnswer, status } }
+
+    /* ---------------------------------------------------------
+       DOM REFERENCES
+    --------------------------------------------------------- */
+    const cheatSheetDrawer = document.getElementById('cheatSheetDrawer');
+    const btnToggleCheatSheet = document.getElementById('btnToggleCheatSheet');
+    const btnCloseCheatSheet = document.getElementById('btnCloseCheatSheet');
+    const btnOpenRulesFromStart = document.getElementById('btnOpenRulesFromStart');
+
+    const screenStart = document.getElementById('screenStart');
+    const screenQuiz = document.getElementById('screenQuiz');
+    const screenReceipt = document.getElementById('screenReceipt');
+
+    const startForm = document.getElementById('startForm');
+    const inputFullName = document.getElementById('inputFullName');
+    const inputGroup = document.getElementById('inputGroup');
+    const nameErrorMsg = document.getElementById('nameErrorMsg');
+
+    const progressLabel = document.getElementById('progressLabel');
+    const retryBadge = document.getElementById('retryBadge');
+    const streakBadge = document.getElementById('streakBadge');
+    const streakCount = document.getElementById('streakCount');
+    const liveScoreCount = document.getElementById('liveScoreCount');
+    const progressBar = document.getElementById('progressBar');
+
+    const questionCard = document.getElementById('questionCard');
+    const questionCategoryTag = document.getElementById('questionCategoryTag');
+    const btnRadarHint = document.getElementById('btnRadarHint');
+    const sentenceDisplay = document.getElementById('sentenceDisplay');
+    const radarHintBox = document.getElementById('radarHintBox');
+    const radarHintText = document.getElementById('radarHintText');
+
+    const answerForm = document.getElementById('answerForm');
+    const singleInputWrapper = document.getElementById('singleInputWrapper');
+    const inputAnswer1 = document.getElementById('inputAnswer1');
+    const dualInputWrapper = document.getElementById('dualInputWrapper');
+    const inputDual1 = document.getElementById('inputDual1');
+    const inputDual2 = document.getElementById('inputDual2');
+    const emptyInputWarning = document.getElementById('emptyInputWarning');
+    const btnCheckAnswer = document.getElementById('btnCheckAnswer');
+
+    const feedbackPanel = document.getElementById('feedbackPanel');
+    const feedbackIcon = document.getElementById('feedbackIcon');
+    const feedbackTitle = document.getElementById('feedbackTitle');
+    const feedbackBody = document.getElementById('feedbackBody');
+    const correctAnswerReveal = document.getElementById('correctAnswerReveal');
+    const correctAnswerText = document.getElementById('correctAnswerText');
+    const btnTryOnceMore = document.getElementById('btnTryOnceMore');
+    const btnNextQuestion = document.getElementById('btnNextQuestion');
+
+    /* ---------------------------------------------------------
+       UTILITY FUNCTIONS
+    --------------------------------------------------------- */
+    function normalize(str) {
+      return (str || '')
+        .toLowerCase()
+        .replace(/[’‘`]/g, "'") // Normalize smart iOS quotes to straight apostrophe
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function toggleCheatSheet(forceState) {
+      const shouldShow = typeof forceState === 'boolean'
+        ? forceState
+        : cheatSheetDrawer.classList.contains('hidden');
+      cheatSheetDrawer.classList.toggle('hidden', !shouldShow);
+    }
+
+    btnToggleCheatSheet.addEventListener('click', () => toggleCheatSheet());
+    btnCloseCheatSheet.addEventListener('click', () => toggleCheatSheet(false));
+    btnOpenRulesFromStart.addEventListener('click', () => toggleCheatSheet(true));
+
+    /* ---------------------------------------------------------
+       START SCREEN HANDLER
+    --------------------------------------------------------- */
+    startForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const nameVal = inputFullName.value.trim();
+      if (!nameVal) {
+        nameErrorMsg.classList.remove('hidden');
+        inputFullName.classList.add('border-rose-500');
+        inputFullName.focus();
+        return;
+      }
+      nameErrorMsg.classList.add('hidden');
+      inputFullName.classList.remove('border-rose-500');
+
+      studentName = nameVal;
+      studentGroup = inputGroup.value.trim() || 'Not specified';
+
+      startSession(QUESTIONS_BANK, false);
+    });
+
+    function startSession(questionList, missedMode) {
+      activeQuestions = [...questionList];
+      isMissedOnlyMode = missedMode;
+      currentIndex = 0;
+      totalPoints = 0;
+      currentStreak = 0;
+      bestStreak = 0;
+
+      if (!missedMode) {
+        resultsMap = {};
+      }
+
+      retryBadge.classList.toggle('hidden', !missedMode);
+      screenStart.classList.add('hidden');
+      screenReceipt.classList.add('hidden');
+      screenQuiz.classList.remove('hidden');
+
+      renderQuestion();
+    }
+
+    /* ---------------------------------------------------------
+       RENDER CURRENT QUESTION
+    --------------------------------------------------------- */
+    function renderQuestion() {
+      const q = activeQuestions[currentIndex];
+      attemptCount = 0;
+
+      // Update header stats
+      progressLabel.textContent = `Question ${currentIndex + 1} of ${activeQuestions.length}`;
+      streakCount.textContent = currentStreak;
+      liveScoreCount.textContent = formatPoints(totalPoints);
+      const pct = ((currentIndex) / activeQuestions.length) * 100;
+      progressBar.style.width = `${Math.max(6, pct)}%`;
+
+      // Tag & Hint reset
+      questionCategoryTag.textContent = `Item #${q.id} • Verb Conjugation`;
+      radarHintBox.classList.add('hidden');
+      radarHintText.textContent = q.hint;
+      btnRadarHint.disabled = false;
+      btnRadarHint.classList.remove('opacity-50');
+
+      // Render sentence with clear visual blank(s)
+      renderSentenceHTML(q, false);
+
+      // Reset inputs
+      emptyInputWarning.classList.add('hidden');
+      feedbackPanel.classList.add('hidden');
+      btnCheckAnswer.classList.remove('hidden');
+      btnCheckAnswer.disabled = false;
+
+      if (q.dual) {
+        singleInputWrapper.classList.add('hidden');
+        dualInputWrapper.classList.remove('hidden');
+        inputDual1.value = '';
+        inputDual2.value = '';
+        inputDual1.disabled = false;
+        inputDual2.disabled = false;
+        setTimeout(() => inputDual1.focus(), 60);
+      } else {
+        dualInputWrapper.classList.add('hidden');
+        singleInputWrapper.classList.remove('hidden');
+        inputAnswer1.value = '';
+        inputAnswer1.disabled = false;
+        setTimeout(() => inputAnswer1.focus(), 60);
+      }
+    }
+
+    function renderSentenceHTML(q, highlightMarker) {
+      const blankChip = `<span class="inline-block px-3 py-0.5 mx-1 rounded-lg bg-sky-100 border-b-2 border-sky-500 mono text-sky-900 text-base font-bold align-baseline">________</span>`;
+      const verbBadge = `<span class="inline-block px-2 py-0.5 ml-1 rounded-md bg-slate-200/90 text-slate-800 mono text-sm font-bold">${q.verbCue}</span>`;
+
+      let afterText = q.promptAfter;
+      let beforeText = q.promptBefore;
+
+      // Highlight the Time Marker phrase when Radar Hint is clicked
+      if (highlightMarker && q.markerPhrase) {
+        const escaped = q.markerPhrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(`(${escaped})`, 'i');
+        const highlightSpan = `<mark class="px-1.5 py-0.5 rounded-md bg-amber-200 text-amber-950 font-extrabold">$1</mark>`;
+        beforeText = beforeText.replace(regex, highlightSpan);
+        afterText = afterText.replace(regex, highlightSpan);
+      }
+
+      if (q.dual) {
+        sentenceDisplay.innerHTML = `${blankChip}${q.promptMiddle}${blankChip}${verbBadge}${afterText}`;
+      } else {
+        sentenceDisplay.innerHTML = `${beforeText}${blankChip}${verbBadge}${afterText}`;
+      }
+    }
+
+    btnRadarHint.addEventListener('click', () => {
+      const q = activeQuestions[currentIndex];
+      renderSentenceHTML(q, true);
+      radarHintBox.classList.remove('hidden');
+      btnRadarHint.disabled = true;
+      btnRadarHint.classList.add('opacity-50');
+    });
+
+    /* ---------------------------------------------------------
+       EVALUATE STUDENT SUBMISSION
+    --------------------------------------------------------- */
+    answerForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const q = activeQuestions[currentIndex];
+
+      let isCorrect = false;
+      let rawUserDisplay = '';
+      let customDiagnostic = null;
+
+      if (q.dual) {
+        const r1 = inputDual1.value;
+        const r2 = inputDual2.value;
+        if (!r1.trim() || !r2.trim()) {
+          emptyInputWarning.classList.remove('hidden');
+          return;
+        }
+        emptyInputWarning.classList.add('hidden');
+        rawUserDisplay = `${r1.trim()} ... ${r2.trim()}`;
+
+        const ok1 = q.acceptedDual[0].includes(normalize(r1));
+        const ok2 = q.acceptedDual[1].includes(normalize(r2));
+        isCorrect = ok1 && ok2;
+
+        if (!isCorrect && q.diagnoseDual) {
+          customDiagnostic = q.diagnoseDual(r1, r2);
+        }
+      } else {
+        const r1 = inputAnswer1.value;
+        if (!r1.trim()) {
+          emptyInputWarning.classList.remove('hidden');
+          return;
+        }
+        emptyInputWarning.classList.add('hidden');
+        rawUserDisplay = r1.trim();
+
+        isCorrect = q.accepted.includes(normalize(r1));
+        if (!isCorrect && q.diagnose) {
+          customDiagnostic = q.diagnose(r1);
+        }
+      }
+
+      attemptCount += 1;
+
+      if (isCorrect) {
+        handleCorrectAnswer(q, rawUserDisplay);
+      } else {
+        handleWrongAnswer(q, rawUserDisplay, customDiagnostic);
+      }
+    });
+
+    function handleCorrectAnswer(q, userAnswer) {
+      // Full credit on 1st attempt (1 pt), half-credit on 2nd attempt (0.5 pt)
+      const earned = attemptCount === 1 ? 1 : 0.5;
+      totalPoints += earned;
+
+      if (attemptCount === 1) {
+        currentStreak += 1;
+        if (currentStreak > bestStreak) bestStreak = currentStreak;
+      }
+
+      // Record result
+      resultsMap[q.id] = {
+        question: q,
+        earnedPoints: earned,
+        userAnswer,
+        status: attemptCount === 1 ? 'correct' : 'half'
+      };
+
+      // Update UI counters
+      streakCount.textContent = currentStreak;
+      liveScoreCount.textContent = formatPoints(totalPoints);
+      streakBadge.classList.add('scale-110');
+      setTimeout(() => streakBadge.classList.remove('scale-110'), 250);
+
+      // Lock inputs
+      lockInputs(true);
+      renderSentenceHTML(q, true);
+
+      // Show celebratory feedback
+      feedbackPanel.className = 'rounded-2xl p-4 sm:p-5 border-2 border-emerald-300 bg-emerald-50 text-emerald-950 space-y-3 animate-pop';
+      feedbackIcon.className = 'w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0 text-base font-extrabold';
+      feedbackIcon.textContent = '✓';
+      feedbackTitle.textContent = attemptCount === 1
+        ? `Spot on! (+1 pt • ${q.tenseName})`
+        : `Nice recovery! (+0.5 pt • ${q.tenseName})`;
+      feedbackBody.textContent = q.ruleExplanation;
+      correctAnswerReveal.classList.add('hidden');
+
+      btnTryOnceMore.classList.add('hidden');
+      btnNextQuestion.textContent = currentIndex === activeQuestions.length - 1
+        ? 'Finish & View Score Receipt →'
+        : 'Next Question →';
+    }
+
+    function handleWrongAnswer(q, userAnswer, customDiagnostic) {
+      currentStreak = 0;
+      streakCount.textContent = currentStreak;
+
+      // Shake card for tactile feedback
+      questionCard.classList.remove('animate-shake');
+      void questionCard.offsetWidth;
+      questionCard.classList.add('animate-shake');
+
+      lockInputs(true);
+
+      if (attemptCount === 1) {
+        // First mistake: Offer diagnostic clue + "Try Once More (Half-Credit)"
+        feedbackPanel.className = 'rounded-2xl p-4 sm:p-5 border-2 border-amber-300 bg-amber-50 text-amber-950 space-y-3 animate-pop';
+        feedbackIcon.className = 'w-8 h-8 rounded-full bg-amber-500 text-white flex items-center justify-center shrink-0 text-base font-extrabold';
+        feedbackIcon.textContent = '!';
+        feedbackTitle.textContent = 'Not quite—check the clue below';
+        feedbackBody.textContent = customDiagnostic || `Scan the Time Marker ("${q.markerPhrase}") and verify your auxiliary verb and verb ending.`;
+        correctAnswerReveal.classList.add('hidden');
+
+        btnTryOnceMore.classList.remove('hidden');
+        btnNextQuestion.textContent = 'Skip & See Rule';
+      } else {
+        // Second mistake: Reveal exact answer and rule
+        finalizeMissedQuestion(q, userAnswer, customDiagnostic);
+      }
+    }
+
+    function finalizeMissedQuestion(q, userAnswer, customDiagnostic) {
+      resultsMap[q.id] = {
+        question: q,
+        earnedPoints: 0,
+        userAnswer: userAnswer || '(skipped)',
+        status: 'missed'
+      };
+
+      renderSentenceHTML(q, true);
+      feedbackPanel.className = 'rounded-2xl p-4 sm:p-5 border-2 border-rose-300 bg-rose-50 text-rose-950 space-y-3 animate-pop';
+      feedbackIcon.className = 'w-8 h-8 rounded-full bg-rose-600 text-white flex items-center justify-center shrink-0 text-base font-extrabold';
+      feedbackIcon.textContent = '✕';
+      feedbackTitle.textContent = `Review Rule: ${q.tenseName}`;
+      feedbackBody.textContent = customDiagnostic ? `${customDiagnostic} ${q.ruleExplanation}` : q.ruleExplanation;
+
+      correctAnswerText.textContent = q.displayAnswer;
+      correctAnswerReveal.classList.remove('hidden');
+
+      btnTryOnceMore.classList.add('hidden');
+      btnNextQuestion.textContent = currentIndex === activeQuestions.length - 1
+        ? 'Finish & View Score Receipt →'
+        : 'Continue →';
+    }
+
+    function lockInputs(locked) {
+      inputAnswer1.disabled = locked;
+      inputDual1.disabled = locked;
+      inputDual2.disabled = locked;
+      btnCheckAnswer.classList.toggle('hidden', locked);
+    }
+
+    btnTryOnceMore.addEventListener('click', () => {
+      const q = activeQuestions[currentIndex];
+      feedbackPanel.classList.add('hidden');
+      lockInputs(false);
+      if (q.dual) {
+        inputDual1.focus();
+      } else {
+        inputAnswer1.focus();
+      }
+    });
+
+    btnNextQuestion.addEventListener('click', () => {
+      const q = activeQuestions[currentIndex];
+      // If user clicked "Skip & See Rule" on 1st wrong attempt, reveal rule first
+      if (attemptCount === 1 && !resultsMap[q.id]) {
+        attemptCount = 2;
+        const lastRaw = q.dual
+          ? `${inputDual1.value.trim()} ... ${inputDual2.value.trim()}`
+          : inputAnswer1.value.trim();
+        finalizeMissedQuestion(q, lastRaw, null);
+        return;
+      }
+
+      if (currentIndex < activeQuestions.length - 1) {
+        currentIndex += 1;
+        renderQuestion();
+      } else {
+        progressBar.style.width = '100%';
+        showScoreReceipt();
+      }
+    });
+
+    /* ---------------------------------------------------------
+       VERIFIED SCORE RECEIPT SCREEN
+    --------------------------------------------------------- */
+    function formatPoints(num) {
+      return Number.isInteger(num) ? `${num}` : num.toFixed(1);
+    }
+
+    function showScoreReceipt() {
+      screenQuiz.classList.add('hidden');
+      screenReceipt.classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      const maxPts = activeQuestions.length;
+      const pct = Math.round((totalPoints / maxPts) * 100);
+
+      // Timestamp & Verification ID
+      const now = new Date();
+      const timestampStr = now.toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+      const hashSeed = `${studentName}-${totalPoints}-${now.getMinutes()}${now.getSeconds()}`;
+      let hash = 0;
+      for (let i = 0; i < hashSeed.length; i++) {
+        hash = ((hash << 5) - hash) + hashSeed.charCodeAt(i);
+        hash |= 0;
+      }
+      const verifyCode = `ID: #T15-${Math.abs(hash).toString(16).toUpperCase().slice(0, 6)}`;
+
+      document.getElementById('receiptName').textContent = studentName;
+      document.getElementById('receiptGroup').textContent = studentGroup;
+      document.getElementById('receiptTimestamp').textContent = timestampStr;
+      document.getElementById('receiptCode').textContent = verifyCode;
+
+      document.getElementById('receiptScoreFraction').textContent = `${formatPoints(totalPoints)} / ${maxPts}`;
+      document.getElementById('receiptScorePercent').textContent = `(${pct}%)`;
+      document.getElementById('receiptBestStreak').textContent = `🔥 ${bestStreak}`;
+
+      // Calculate Tense Breakdown across activeQuestions
+      const stats = {
+        PP: { earned: 0, total: 0 },
+        SP: { earned: 0, total: 0 },
+        PC: { earned: 0, total: 0 }
+      };
+
+      const missedItems = [];
+
+      activeQuestions.forEach((q) => {
+        const res = resultsMap[q.id];
+        stats[q.tense].total += 1;
+        if (res) {
+          stats[q.tense].earned += res.earnedPoints;
+          if (res.earnedPoints < 1) {
+            missedItems.push(res);
+          }
+        }
+      });
+
+      updateTenseStatCard('statPP', 'statPPDetail', stats.PP);
+      updateTenseStatCard('statSP', 'statSPDetail', stats.SP);
+      updateTenseStatCard('statPC', 'statPCDetail', stats.PC);
+
+      // Populate Missed Verbs Review List
+      const missedListContainer = document.getElementById('missedListContainer');
+      const btnPracticeMissed = document.getElementById('btnPracticeMissed');
+      missedListContainer.innerHTML = '';
+
+      if (missedItems.length === 0) {
+        missedListContainer.innerHTML = `
+          <div class="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs sm:text-sm font-bold text-emerald-800">
+            🌟 Flawless performance! Every verb conjugation was accurate on the first try.
+          </div>
+        `;
+        btnPracticeMissed.classList.add('hidden');
+      } else {
+        btnPracticeMissed.classList.remove('hidden');
+        missedItems.forEach((item) => {
+          const q = item.question;
+          const badge = item.earnedPoints === 0.5
+            ? `<span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px] font-extrabold">2nd Try (0.5)</span>`
+            : `<span class="px-2 py-0.5 rounded bg-rose-100 text-rose-800 text-[10px] font-extrabold">Missed (0)</span>`;
+
+          const card = document.createElement('div');
+          card.className = 'p-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs space-y-1';
+          card.innerHTML = `
+            <div class="flex items-center justify-between gap-2">
+              <span class="font-extrabold text-slate-800">#${q.id} • ${q.tenseName} <span class="text-slate-400 font-normal">(${q.markerPhrase})</span></span>
+              ${badge}
+            </div>
+            <p class="text-slate-600">
+              Your input: <span class="mono text-rose-700 font-semibold">${escapeHTML(item.userAnswer)}</span> →
+              Correct: <span class="mono text-emerald-700 font-bold">${q.displayAnswer}</span>
+            </p>
+          `;
+          missedListContainer.appendChild(card);
+        });
+      }
+
+      // Store summary text for clipboard button
+      window.__receiptSummaryText = [
+        `TOPIC 15: TIME-MARKER & VERB CONJUGATION LAB`,
+        `Student: ${studentName}`,
+        `Group/Team: ${studentGroup}`,
+        `Score: ${formatPoints(totalPoints)}/${maxPts} (${pct}%) | Best Streak: ${bestStreak}`,
+        `Breakdown: Present Perfect ${formatPct(stats.PP)} | Simple Past ${formatPct(stats.SP)} | Pres. Continuous ${formatPct(stats.PC)}`,
+        `Completed: ${timestampStr} (${verifyCode})`
+      ].join('\n');
+    }
+
+    function updateTenseStatCard(pctElId, detailElId, statObj) {
+      const pctEl = document.getElementById(pctElId);
+      const detailEl = document.getElementById(detailElId);
+      if (statObj.total === 0) {
+        pctEl.textContent = 'N/A';
+        detailEl.textContent = '0 items';
+        return;
+      }
+      const p = Math.round((statObj.earned / statObj.total) * 100);
+      pctEl.textContent = `${p}%`;
+      detailEl.textContent = `${formatPoints(statObj.earned)}/${statObj.total} pts`;
+    }
+
+    function formatPct(statObj) {
+      if (statObj.total === 0) return 'N/A';
+      return `${Math.round((statObj.earned / statObj.total) * 100)}%`;
+    }
+
+    function escapeHTML(str) {
+      return str.replace(/[&<>"']/g, (m) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[m]));
+    }
+
+    /* ---------------------------------------------------------
+       POST-COMPLETION BUTTONS (COPY, RETRY MISSED, RESTART)
+    --------------------------------------------------------- */
+    document.getElementById('btnCopySummary').addEventListener('click', () => {
+      const text = window.__receiptSummaryText || '';
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand('copy');
+        const copyBtnText = document.getElementById('copyBtnText');
+        copyBtnText.textContent = '✓ Copied to Clipboard!';
+        setTimeout(() => {
+          copyBtnText.textContent = '📋 Copy Results Summary';
+        }, 2200);
+      } catch (err) {
+        // Fallback if clipboard blocked
+      }
+      document.body.removeChild(textarea);
+    });
+
+    document.getElementById('btnPracticeMissed').addEventListener('click', () => {
+      const missedQuestions = activeQuestions.filter((q) => {
+        const res = resultsMap[q.id];
+        return !res || res.earnedPoints < 1;
+      });
+      if (missedQuestions.length > 0) {
+        startSession(missedQuestions, true);
+      }
+    });
+
+    document.getElementById('btnRestartFull').addEventListener('click', () => {
+      startSession(QUESTIONS_BANK, false);
+    });
+  </script>
+</body>
+</html>
