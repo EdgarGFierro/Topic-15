@@ -176,7 +176,7 @@
     .btn-retry {
       background: #d97706;
       color: #ffffff;
-      margin-bottom: 10px;
+      margin-bottom: 14px;
     }
 
     .btn-retry:hover {
@@ -245,7 +245,7 @@
       background: var(--primary-light);
       padding: 2px 8px;
       border-radius: 6px;
-      font-size: 1rem;
+      font-size: 0.95rem;
     }
 
     .keyword {
@@ -333,17 +333,18 @@
     }
 
     .review-list {
-      margin-top: 12px;
+      margin-top: 10px;
       margin-bottom: 16px;
-      font-size: 0.88rem;
+      font-size: 0.9rem;
     }
 
     .review-item {
       background: #ffffff;
       border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      padding: 10px 12px;
-      margin-bottom: 8px;
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      line-height: 1.6;
     }
   </style>
 </head>
@@ -449,7 +450,7 @@
       </button>
 
       <div id="mistakesSection" class="hidden">
-        <h3 style="font-size: 1rem; margin-bottom: 8px;">Oraciones por reforzar:</h3>
+        <h3 style="font-size: 1rem; margin-bottom: 6px;">Oraciones pendientes por corregir:</h3>
         <div class="review-list" id="reviewList"></div>
       </div>
 
@@ -854,12 +855,15 @@
           fb.style.display = "block";
           inputEl.focus();
         } else {
+          q.lastUserAnswer = rawVal.trim();
           if (!isRedemptionMode) {
             q.status = "wrong";
-            q.lastUserAnswer = rawVal.trim();
+            fb.className = "feedback error";
+            fb.innerHTML = `❌ <strong>Incorrecto.</strong> ${diagnostic}<br><em>Esta oración pasará a tu ronda de repaso al final (sin mostrar la respuesta para que puedas resolverla).</em>`;
+          } else {
+            fb.className = "feedback error";
+            fb.innerHTML = `❌ <strong>Respuesta correcta:</strong> <code>${q.displayAnswer}</code> (${q.tense}).<br>${diagnostic}`;
           }
-          fb.className = "feedback error";
-          fb.innerHTML = `❌ <strong>Respuesta correcta:</strong> <code>${q.displayAnswer}</code> (${q.tense}).<br>${diagnostic}`;
           fb.style.display = "block";
           finishQuestionUI();
         }
@@ -918,9 +922,8 @@
         const listEl = document.getElementById("reviewList");
         listEl.innerHTML = toReview.map(m => `
           <div class="review-item">
-            <div style="margin-bottom:4px;">${m.before} <strong>[${m.displayAnswer}]</strong> ${m.after}</div>
-            <div style="color:var(--error);">Tu respuesta: <strong>${m.lastUserAnswer}</strong></div>
-            <div style="color:var(--success);">Forma correcta: <strong>${m.displayAnswer}</strong></div>
+            <div style="margin-bottom:4px;">${m.before} __________ <span class="verb-base">(${m.base})</span> ${m.after}</div>
+            <div style="color:var(--error);">Tu respuesta anterior: <strong>${m.lastUserAnswer}</strong></div>
           </div>
         `).join("");
       } else {
