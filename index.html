@@ -11,7 +11,6 @@
       --primary-light: #ccfbf1;
       --accent: #f59e0b;
       --accent-bg: #fef3c7;
-      --accent-border: #fcd34d;
       --bg: #f1f5f9;
       --card: #ffffff;
       --text: #0f172a;
@@ -128,7 +127,7 @@
       color: var(--text);
     }
 
-    /* 16px font-size prevents automatic zoom on iPhone/iPad Safari */
+    /* 16px evita el zoom automático en Safari de iPhone/iPad */
     input[type="text"] {
       width: 100%;
       padding: 12px 14px;
@@ -174,10 +173,20 @@
       background: var(--primary-dark);
     }
 
+    .btn-retry {
+      background: #d97706;
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+
+    .btn-retry:hover {
+      background: #b45309;
+    }
+
     .btn-secondary {
       background: #e2e8f0;
       color: var(--text);
-      margin-top: 10px;
+      margin-top: 8px;
     }
 
     .btn-outline {
@@ -289,7 +298,6 @@
       display: none !important;
     }
 
-    /* Receipt Styling */
     .receipt {
       border: 2px dashed var(--primary);
       background: #f0fdfa;
@@ -316,7 +324,7 @@
       display: flex;
       justify-content: space-between;
       font-size: 0.9rem;
-      padding: 5px 0;
+      padding: 6px 0;
       border-bottom: 1px solid rgba(15, 118, 110, 0.1);
     }
 
@@ -325,7 +333,8 @@
     }
 
     .review-list {
-      margin-top: 14px;
+      margin-top: 12px;
+      margin-bottom: 16px;
       font-size: 0.88rem;
     }
 
@@ -354,26 +363,21 @@
       <div class="guide-grid">
         <div class="guide-item">
           <span class="tense-title">1. Present Perfect (have / has + Past Participle)</span>
-          Palabras clave: <em>already, yet, since, for, three times, this week</em>.
+          Palabras clave: <em>already, yet, since, three times, this week</em>.
         </div>
         <div class="guide-item">
           <span class="tense-title">2. Simple Past (verbo en pasado simple)</span>
-          Palabras clave: <em>yesterday, last month, two nights ago, when I was...</em>
+          Palabras clave: <em>yesterday, last month, two nights ago, in 2022</em>.
         </div>
         <div class="guide-item">
           <span class="tense-title">3. Present Continuous (am / is / are + verbo-ing)</span>
-          Palabras clave: <em>right now, at the moment</em>.
+          Palabras clave: <em>right now, at the moment, now</em>.
         </div>
       </div>
 
       <div class="form-group">
         <label for="studentName">Tu nombre completo:</label>
         <input type="text" id="studentName" placeholder="Ej. Sofía Hernández López" autocomplete="name" />
-      </div>
-
-      <div class="form-group">
-        <label for="studentGroup">Grupo / Matrícula (opcional):</label>
-        <input type="text" id="studentGroup" placeholder="Ej. Grupo 201" />
       </div>
 
       <button class="btn btn-primary" onclick="startQuiz()">Comenzar práctica</button>
@@ -383,7 +387,7 @@
     <div class="content hidden" id="quizScreen">
       <div class="progress-wrap">
         <div class="progress-meta">
-          <span id="progressText">Pregunta 1 de 12</span>
+          <span id="progressText">Oración 1 de 15</span>
           <span id="scoreText">Puntos: 0</span>
         </div>
         <div class="progress-bar">
@@ -415,14 +419,14 @@
       <div class="feedback" id="feedbackBox"></div>
     </div>
 
-    <!-- PANTALLA 3: COMPROBANTE FINAL -->
+    <!-- PANTALLA 3: RESULTADOS -->
     <div class="content hidden" id="resultScreen">
       <div class="receipt">
         <div class="receipt-header">
           <div style="font-size: 0.85rem; font-weight: 700; color: var(--primary); text-transform: uppercase;">
             Comprobante de Práctica • Topic 15
           </div>
-          <div class="receipt-score" id="finalScoreDisplay">0 / 12</div>
+          <div class="receipt-score" id="finalScoreDisplay">0 / 15</div>
           <div style="font-size: 0.9rem; color: var(--muted); margin-top: 4px;" id="finalPercentDisplay">0% de precisión</div>
         </div>
 
@@ -431,65 +435,71 @@
           <span id="resName">-</span>
         </div>
         <div class="receipt-row">
-          <span><strong>Grupo:</strong></span>
-          <span id="resGroup">-</span>
-        </div>
-        <div class="receipt-row">
           <span><strong>Fecha y hora:</strong></span>
           <span id="resTime">-</span>
         </div>
         <div class="receipt-row">
-          <span><strong>Código de verificación:</strong></span>
+          <span><strong>Código:</strong></span>
           <span id="resCode" style="font-family: monospace; font-weight: 700;">-</span>
         </div>
       </div>
 
-      <div class="desc-box" style="margin-bottom: 14px;">
-        📸 <strong>Toma captura de pantalla</strong> a este comprobante si tu profesor solicita evidencia de práctica.
-      </div>
+      <button class="btn btn-retry hidden" id="retryMissedBtn" onclick="startRedemption()">
+        🔁 Volver a practicar las que fallé
+      </button>
 
       <div id="mistakesSection" class="hidden">
-        <h3 style="font-size: 1rem; margin-bottom: 8px;">Repaso de respuestas para el examen:</h3>
+        <h3 style="font-size: 1rem; margin-bottom: 8px;">Oraciones por reforzar:</h3>
         <div class="review-list" id="reviewList"></div>
       </div>
 
-      <button class="btn btn-secondary" onclick="location.reload()">Volver a practicar</button>
+      <button class="btn btn-secondary" onclick="location.reload()">Reiniciar toda la práctica</button>
     </div>
   </div>
 
   <script>
-    const questions = [
+    const masterQuestions = [
       {
+        id: 1,
         before: "My brother",
-        base: "write",
-        after: 'three songs <span class="keyword">last month</span>.',
+        base: "send",
+        after: 'three emails <span class="keyword">last month</span>.',
         tense: "Simple Past",
         subjectType: "singular",
-        hint: "La palabra clave 'last month' indica un tiempo pasado ya cerrado → usa Simple Past.",
-        accepted: ["wrote"],
-        displayAnswer: "wrote"
+        hint: "La palabra clave 'last month' indica un tiempo pasado ya cerrado → usa Simple Past (verbo irregular).",
+        accepted: ["sent"],
+        displayAnswer: "sent",
+        status: "pending",
+        lastUserAnswer: ""
       },
       {
+        id: 2,
         before: "Sofia",
-        base: "finish",
-        after: 'her final report <span class="keyword">already</span>.',
+        base: "complete",
+        after: 'her project <span class="keyword">already</span>.',
         tense: "Present Perfect",
         subjectType: "singular3rd",
         hint: "La palabra clave 'already' se usa con Present Perfect (has + Past Participle).",
-        accepted: ["has finished", "'s finished"],
-        displayAnswer: "has finished"
+        accepted: ["has completed", "'s completed"],
+        displayAnswer: "has completed",
+        status: "pending",
+        lastUserAnswer: ""
       },
       {
+        id: 3,
         before: "Be quiet! We",
-        base: "study",
-        after: 'for our final exam <span class="keyword">right now</span>.',
+        base: "prepare",
+        after: 'our presentation <span class="keyword">right now</span>.',
         tense: "Present Continuous",
         subjectType: "plural",
         hint: "La palabra clave 'right now' indica una acción en este preciso momento → usa Present Continuous.",
-        accepted: ["are studying", "'re studying"],
-        displayAnswer: "are studying"
+        accepted: ["are preparing", "'re preparing"],
+        displayAnswer: "are preparing",
+        status: "pending",
+        lastUserAnswer: ""
       },
       {
+        id: 4,
         before: "Our teacher",
         base: "work",
         after: 'at this university <span class="keyword">since 2019</span>.',
@@ -497,9 +507,12 @@
         subjectType: "singular3rd",
         hint: "La palabra clave 'since 2019' indica algo que empezó en el pasado y continúa hoy → usa Present Perfect.",
         accepted: ["has worked", "'s worked"],
-        displayAnswer: "has worked"
+        displayAnswer: "has worked",
+        status: "pending",
+        lastUserAnswer: ""
       },
       {
+        id: 5,
         before: "They",
         base: "go",
         after: 'to the beach with their cousins <span class="keyword">yesterday</span>.',
@@ -507,19 +520,12 @@
         subjectType: "plural",
         hint: "La palabra clave 'yesterday' señala un día terminado → usa Simple Past (verbo irregular).",
         accepted: ["went"],
-        displayAnswer: "went"
+        displayAnswer: "went",
+        status: "pending",
+        lastUserAnswer: ""
       },
       {
-        before: "I",
-        base: "not / eat",
-        after: 'sushi <span class="keyword">yet</span>, so I want to try it tonight.',
-        tense: "Present Perfect",
-        subjectType: "I",
-        hint: "La palabra clave 'yet' al final con (not) pide Present Perfect negativo (haven't + Past Participle).",
-        accepted: ["haven't eaten", "have not eaten"],
-        displayAnswer: "haven't eaten / have not eaten"
-      },
-      {
+        id: 6,
         before: "Look out the window—it",
         base: "rain",
         after: 'heavily <span class="keyword">at the moment</span>.',
@@ -527,19 +533,25 @@
         subjectType: "singular3rd",
         hint: "La palabra clave 'at the moment' indica algo ocurriendo ahora mismo → usa Present Continuous.",
         accepted: ["is raining", "'s raining"],
-        displayAnswer: "is raining"
+        displayAnswer: "is raining",
+        status: "pending",
+        lastUserAnswer: ""
       },
       {
-        before: "Carlos and Ana",
-        base: "be",
-        after: 'to Guanajuato <span class="keyword">three times</span>.',
+        id: 7,
+        before: "I",
+        base: "not / eat",
+        after: 'sushi <span class="keyword">yet</span>, so I want to try it tonight.',
         tense: "Present Perfect",
-        subjectType: "plural",
-        hint: "Experiencias de vida repetidas sin fecha exacta ('three times') → usa Present Perfect (have + Past Participle).",
-        accepted: ["have been", "'ve been"],
-        displayAnswer: "have been"
+        subjectType: "I",
+        hint: "La palabra clave 'yet' al final con (not) pide Present Perfect negativo (haven't + Past Participle).",
+        accepted: ["haven't eaten", "have not eaten"],
+        displayAnswer: "haven't eaten / have not eaten",
+        status: "pending",
+        lastUserAnswer: ""
       },
       {
+        id: 8,
         before: "When I was ten years old, I",
         base: "break",
         after: 'my left arm <span class="keyword">back then</span>.',
@@ -547,29 +559,12 @@
         subjectType: "I",
         hint: "Es una etapa terminada de la infancia ('When I was ten...') → usa Simple Past (verbo irregular).",
         accepted: ["broke"],
-        displayAnswer: "broke"
+        displayAnswer: "broke",
+        status: "pending",
+        lastUserAnswer: ""
       },
       {
-        before: "She",
-        base: "buy",
-        after: 'a new laptop for her classes <span class="keyword">this week</span>.',
-        tense: "Present Perfect",
-        subjectType: "singular3rd",
-        hint: "La palabra clave 'this week' es un periodo de tiempo que aún no termina → usa Present Perfect.",
-        accepted: ["has bought", "'s bought"],
-        displayAnswer: "has bought"
-      },
-      {
-        before: "We",
-        base: "watch",
-        after: 'a great sci-fi movie <span class="keyword">two nights ago</span>.',
-        tense: "Simple Past",
-        subjectType: "plural",
-        hint: "La palabra clave 'two nights ago' marca un momento específico terminado → usa Simple Past.",
-        accepted: ["watched"],
-        displayAnswer: "watched"
-      },
-      {
+        id: 9,
         before: "Right now, the students",
         base: "take",
         after: 'notes on the board <span class="keyword">at this second</span>.',
@@ -577,22 +572,102 @@
         subjectType: "plural",
         hint: "La acción está ocurriendo en este instante ('Right now / at this second') → usa Present Continuous.",
         accepted: ["are taking", "'re taking"],
-        displayAnswer: "are taking"
+        displayAnswer: "are taking",
+        status: "pending",
+        lastUserAnswer: ""
+      },
+      {
+        id: 10,
+        before: "Carlos and Ana",
+        base: "be",
+        after: 'to Guanajuato <span class="keyword">three times</span>.',
+        tense: "Present Perfect",
+        subjectType: "plural",
+        hint: "Experiencias repetidas sin fecha exacta ('three times') → usa Present Perfect (have + Past Participle).",
+        accepted: ["have been", "'ve been"],
+        displayAnswer: "have been",
+        status: "pending",
+        lastUserAnswer: ""
+      },
+      {
+        id: 11,
+        before: "We",
+        base: "watch",
+        after: 'a great sci-fi movie <span class="keyword">two nights ago</span>.',
+        tense: "Simple Past",
+        subjectType: "plural",
+        hint: "La palabra clave 'two nights ago' marca un momento específico terminado → usa Simple Past.",
+        accepted: ["watched"],
+        displayAnswer: "watched",
+        status: "pending",
+        lastUserAnswer: ""
+      },
+      {
+        id: 12,
+        before: "Listen! Someone",
+        base: "play",
+        after: 'the guitar in the hallway <span class="keyword">now</span>.',
+        tense: "Present Continuous",
+        subjectType: "singular3rd",
+        hint: "La palabra clave 'now' indica algo que sucede mientras hablamos → usa Present Continuous.",
+        accepted: ["is playing", "'s playing"],
+        displayAnswer: "is playing",
+        status: "pending",
+        lastUserAnswer: ""
+      },
+      {
+        id: 13,
+        before: "She",
+        base: "buy",
+        after: 'a new laptop for her classes <span class="keyword">this week</span>.',
+        tense: "Present Perfect",
+        subjectType: "singular3rd",
+        hint: "La palabra clave 'this week' es un periodo de tiempo que aún no termina → usa Present Perfect.",
+        accepted: ["has bought", "'s bought"],
+        displayAnswer: "has bought",
+        status: "pending",
+        lastUserAnswer: ""
+      },
+      {
+        id: 14,
+        before: "My parents",
+        base: "travel",
+        after: 'to Oaxaca <span class="keyword">in 2022</span>.',
+        tense: "Simple Past",
+        subjectType: "plural",
+        hint: "Un año específico en el pasado ('in 2022') indica una acción terminada → usa Simple Past.",
+        accepted: ["traveled", "travelled"],
+        displayAnswer: "traveled",
+        status: "pending",
+        lastUserAnswer: ""
+      },
+      {
+        id: 15,
+        before: "Hurry up! The bus",
+        base: "leave",
+        after: 'the station <span class="keyword">right now</span>.',
+        tense: "Present Continuous",
+        subjectType: "singular3rd",
+        hint: "La palabra clave 'right now' indica que ocurre en este preciso instante → usa Present Continuous.",
+        accepted: ["is leaving", "'s leaving"],
+        displayAnswer: "is leaving",
+        status: "pending",
+        lastUserAnswer: ""
       }
     ];
 
+    let activeDeck = [];
     let currentIdx = 0;
     let score = 0;
     let attempts = 0;
+    let isRedemptionMode = false;
     let studentName = "";
-    let studentGroup = "";
-    const historyLog = [];
 
     function normalizeInput(str) {
       return str
         .trim()
         .toLowerCase()
-        .replace(/[\u2018\u2019\u02BC]/g, "'") // Normalize iOS curly apostrophes
+        .replace(/[\u2018\u2019\u02BC]/g, "'")
         .replace(/\s+/g, " ");
     }
 
@@ -603,7 +678,9 @@
         return;
       }
       studentName = nameInput;
-      studentGroup = document.getElementById("studentGroup").value.trim() || "Sin grupo";
+      activeDeck = [...masterQuestions];
+      currentIdx = 0;
+      isRedemptionMode = false;
 
       document.getElementById("startScreen").classList.add("hidden");
       document.getElementById("quizScreen").classList.remove("hidden");
@@ -611,13 +688,27 @@
       renderQuestion();
     }
 
+    function startRedemption() {
+      activeDeck = masterQuestions.filter(q => q.status !== "ok" && q.status !== "recovered");
+      if (activeDeck.length === 0) return;
+
+      currentIdx = 0;
+      isRedemptionMode = true;
+
+      document.getElementById("resultScreen").classList.add("hidden");
+      document.getElementById("quizScreen").classList.remove("hidden");
+      document.getElementById("headerBadge").textContent = "Repaso de errores";
+      renderQuestion();
+    }
+
     function renderQuestion() {
-      const q = questions[currentIdx];
+      const q = activeDeck[currentIdx];
       attempts = 0;
 
-      document.getElementById("progressText").textContent = `Oración ${currentIdx + 1} de ${questions.length}`;
+      const labelPrefix = isRedemptionMode ? "Repaso" : "Oración";
+      document.getElementById("progressText").textContent = `${labelPrefix} ${currentIdx + 1} de ${activeDeck.length}`;
       document.getElementById("scoreText").textContent = `Puntos: ${score}`;
-      document.getElementById("progressFill").style.width = `${(currentIdx / questions.length) * 100}%`;
+      document.getElementById("progressFill").style.width = `${(currentIdx / activeDeck.length) * 100}%`;
 
       document.getElementById("sentenceBox").innerHTML =
         `${q.before} __________ <span class="verb-base">(${q.base})</span> ${q.after}`;
@@ -653,24 +744,18 @@
     }
 
     function diagnoseError(userAns, q) {
-      // 1. Over-regularized verbs / spelling traps
-      if (/\b(writed|goed|eated|breaked|buyed|beed)\b/.test(userAns)) {
+      if (/\b(sended|goed|eated|breaked|buyed|beed|leaved)\b/.test(userAns)) {
         return "¡Ojo! Este es un verbo irregular, no lleva terminación -ed. Revisa su forma irregular correcta.";
       }
-      if (userAns.includes("takeing")) {
-        return "Detalle de ortografía: cuando un verbo termina en -e (take), quita la 'e' antes de poner -ing.";
-      }
-      if (userAns.includes("studing")) {
-        return "Detalle de ortografía: conserva la 'y' antes de agregar -ing (study → studying).";
+      if (/(prepareing|takeing|leaveing)/.test(userAns)) {
+        return "Detalle de ortografía: cuando un verbo termina en -e (prepare, take, leave), quita la 'e' antes de poner -ing.";
       }
 
-      // 2. Unconjugated base verb
       const cleanBase = q.base.replace("not / ", "").trim();
       if (userAns === cleanBase || userAns === q.base) {
         return "Escribiste el verbo en su forma base sin conjugar. Fíjate en la palabra clave resaltada para saber qué tiempo usar.";
       }
 
-      // 3. Simple Past diagnostics
       if (q.tense === "Simple Past") {
         if (/^(have|has|'ve|'s|haven't|hasn't)\b/.test(userAns)) {
           return "La palabra clave indica un tiempo pasado ya terminado. No uses have/has; usa directamente el Simple Past.";
@@ -678,10 +763,9 @@
         if (/\b(am|is|are|was|were)\b/.test(userAns) || userAns.endsWith("ing")) {
           return "La palabra clave señala una acción concluida en el pasado. Usa el verbo en Simple Past.";
         }
-        return "Recuerda usar el Simple Past (pasado simple) porque la palabra clave indica un momento cerrado en el pasado.";
+        return "Usa el Simple Past (pasado simple) porque la palabra clave indica un momento cerrado en el pasado.";
       }
 
-      // 4. Present Perfect diagnostics
       if (q.tense === "Present Perfect") {
         const hasAux = /^(have|has|'ve|'s|haven't|hasn't)\b/.test(userAns);
         if (!hasAux) {
@@ -696,13 +780,12 @@
         if (q.base.includes("not") && !/(not|n't)/.test(userAns)) {
           return "La oración indica (not) y 'yet' señala algo que aún no ocurre. Usa la forma negativa (haven't + participio).";
         }
-        if (/\b(ate|wrote|went|broke|was|were)\b/.test(userAns)) {
+        if (/\b(ate|sent|went|broke|was|were)\b/.test(userAns)) {
           return "Usaste bien el auxiliar, pero el verbo principal debe ir en Past Participle (participio pasado), no en Simple Past.";
         }
         return "La palabra clave conecta la acción con el presente. Estructura: have / has + Past Participle.";
       }
 
-      // 5. Present Continuous diagnostics
       if (q.tense === "Present Continuous") {
         const hasBe = /^(am|is|are|'m|'s|'re)\b/.test(userAns);
         if (!hasBe) {
@@ -715,7 +798,7 @@
           return "El sujeto es plural (We / the students), por lo tanto debes usar 'are'.";
         }
         if (q.subjectType === "singular3rd" && /^(are|'re|am|'m)\b/.test(userAns)) {
-          return "El sujeto es singular (it), por lo tanto debes usar 'is'.";
+          return "El sujeto es singular (it / someone / the bus), por lo tanto debes usar 'is'.";
         }
         return "La palabra clave indica que sucede en este instante. Estructura: am / is / are + verbo-ing.";
       }
@@ -728,7 +811,7 @@
       const rawVal = inputEl.value;
       const userAns = normalizeInput(rawVal);
       const fb = document.getElementById("feedbackBox");
-      const q = questions[currentIdx];
+      const q = activeDeck[currentIdx];
 
       if (!userAns) {
         fb.className = "feedback warn";
@@ -741,23 +824,27 @@
       const isCorrect = q.accepted.includes(userAns);
 
       if (isCorrect) {
-        const earned = attempts === 1 ? 1 : 0.5;
-        score += earned;
+        if (!isRedemptionMode) {
+          const earned = attempts === 1 ? 1 : 0.5;
+          score += earned;
+          q.status = attempts === 1 ? "ok" : "retry";
+          q.lastUserAnswer = rawVal.trim();
+
+          fb.className = "feedback success";
+          fb.innerHTML = attempts === 1
+            ? `✅ <strong>¡Excelente!</strong> Tiempo verbal: <strong>${q.tense}</strong>.`
+            : `✅ <strong>¡Correcto en el segundo intento!</strong> (+0.5 pts). Tiempo: <strong>${q.tense}</strong>.`;
+        } else {
+          if (q.status === "wrong") {
+            score += 0.5;
+          }
+          q.status = "recovered";
+          fb.className = "feedback success";
+          fb.innerHTML = `✅ <strong>¡Recuperada!</strong> Dominaste esta oración en <strong>${q.tense}</strong>.`;
+        }
+
         document.getElementById("scoreText").textContent = `Puntos: ${score}`;
-
-        fb.className = "feedback success";
-        fb.innerHTML = attempts === 1
-          ? `✅ <strong>¡Excelente!</strong> Tiempo verbal: <strong>${q.tense}</strong>.`
-          : `✅ <strong>¡Correcto en el segundo intento!</strong> (+0.5 pts). Tiempo: <strong>${q.tense}</strong>.`;
         fb.style.display = "block";
-
-        historyLog.push({
-          sentence: `${q.before} [${q.displayAnswer}] ${q.after}`,
-          user: rawVal.trim(),
-          correct: q.displayAnswer,
-          status: attempts === 1 ? "ok" : "retry"
-        });
-
         finishQuestionUI();
       } else {
         const diagnostic = diagnoseError(userAns, q);
@@ -767,17 +854,13 @@
           fb.style.display = "block";
           inputEl.focus();
         } else {
+          if (!isRedemptionMode) {
+            q.status = "wrong";
+            q.lastUserAnswer = rawVal.trim();
+          }
           fb.className = "feedback error";
           fb.innerHTML = `❌ <strong>Respuesta correcta:</strong> <code>${q.displayAnswer}</code> (${q.tense}).<br>${diagnostic}`;
           fb.style.display = "block";
-
-          historyLog.push({
-            sentence: `${q.before} [${q.displayAnswer}] ${q.after}`,
-            user: rawVal.trim(),
-            correct: q.displayAnswer,
-            status: "wrong"
-          });
-
           finishQuestionUI();
         }
       }
@@ -788,12 +871,12 @@
       document.getElementById("checkBtn").classList.add("hidden");
       const nextBtn = document.getElementById("nextBtn");
       nextBtn.classList.remove("hidden");
-      nextBtn.textContent = currentIdx === questions.length - 1 ? "Ver resultado final →" : "Siguiente oración →";
+      nextBtn.textContent = currentIdx === activeDeck.length - 1 ? "Ver resultado final →" : "Siguiente oración →";
     }
 
     function nextQuestion() {
       currentIdx++;
-      if (currentIdx < questions.length) {
+      if (currentIdx < activeDeck.length) {
         renderQuestion();
       } else {
         showResults();
@@ -805,7 +888,8 @@
       document.getElementById("resultScreen").classList.remove("hidden");
       document.getElementById("headerBadge").textContent = "Completado";
 
-      const percent = Math.round((score / questions.length) * 100);
+      const total = masterQuestions.length;
+      const percent = Math.round((score / total) * 100);
       const now = new Date();
       const timeStr = now.toLocaleString("es-MX", {
         day: "2-digit",
@@ -816,28 +900,35 @@
       });
       const code = `T15-${Math.round(score * 10)}-${now.getMinutes()}${now.getSeconds()}`;
 
-      document.getElementById("finalScoreDisplay").textContent = `${score} / ${questions.length}`;
+      document.getElementById("finalScoreDisplay").textContent = `${score} / ${total}`;
       document.getElementById("finalPercentDisplay").textContent = `${percent}% de precisión`;
       document.getElementById("resName").textContent = studentName;
-      document.getElementById("resGroup").textContent = studentGroup;
       document.getElementById("resTime").textContent = timeStr;
       document.getElementById("resCode").textContent = code;
 
-      const missed = historyLog.filter(item => item.status !== "ok");
-      if (missed.length > 0) {
-        document.getElementById("mistakesSection").classList.remove("hidden");
+      const toReview = masterQuestions.filter(q => q.status !== "ok" && q.status !== "recovered");
+      const retryBtn = document.getElementById("retryMissedBtn");
+      const mistakesSec = document.getElementById("mistakesSection");
+
+      if (toReview.length > 0) {
+        retryBtn.classList.remove("hidden");
+        retryBtn.textContent = `🔁 Volver a practicar las que fallé (${toReview.length})`;
+
+        mistakesSec.classList.remove("hidden");
         const listEl = document.getElementById("reviewList");
-        listEl.innerHTML = missed.map(m => `
+        listEl.innerHTML = toReview.map(m => `
           <div class="review-item">
-            <div style="margin-bottom:4px;">${m.sentence}</div>
-            <div style="color:var(--error);">Tu respuesta: <strong>${m.user}</strong></div>
-            <div style="color:var(--success);">Forma correcta: <strong>${m.correct}</strong></div>
+            <div style="margin-bottom:4px;">${m.before} <strong>[${m.displayAnswer}]</strong> ${m.after}</div>
+            <div style="color:var(--error);">Tu respuesta: <strong>${m.lastUserAnswer}</strong></div>
+            <div style="color:var(--success);">Forma correcta: <strong>${m.displayAnswer}</strong></div>
           </div>
         `).join("");
+      } else {
+        retryBtn.classList.add("hidden");
+        mistakesSec.classList.add("hidden");
       }
     }
 
-    // Allow pressing Enter key on mobile/desktop keyboard to submit or advance
     document.getElementById("answerInput").addEventListener("keypress", function (e) {
       if (e.key === "Enter") {
         e.preventDefault();
