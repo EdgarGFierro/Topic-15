@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Verb & Auxiliary Trainer</title>
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-dark: #172554;
+      --primary-light: #dbeafe;
+      --accent: #0f766e;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --border: #cbd5e1;
+      --success: #15803d;
+      --success-bg: #dcfce7;
+      --error: #b91c1c;
+      --error-bg: #fee2e2;
+      --warn: #b45309;
+      --warn-bg: #fef3c7;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px;
+      line-height: 1.5;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 620px;
+      background: var(--card);
+      border-radius: 18px;
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: #ffffff;
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header h1 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .badge {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .content {
+      padding: 24px;
+    }
+
+    .desc-box {
+      background: #f8fafc;
+      border-left: 4px solid var(--primary);
+      padding: 14px 16px;
+      border-radius: 0 10px 10px 0;
+      margin-bottom: 18px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .desc-box strong {
+      color: var(--text);
+    }
+
+    .rules-list {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .rules-list li {
+      margin-left: 18px;
+      margin-bottom: 6px;
+    }
+
+    .rules-list li:last-child {
+      margin-bottom: 0;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    /* 16px evita el zoom automático en iPhone/iPad */
+    input[type="text"] {
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 16px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      background: #ffffff;
+      color: var(--text);
+    }
+
+    input[type="text"]:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.15);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.1s, background-color 0.2s;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-teal {
+      background: var(--accent);
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+
+    .btn-teal:hover {
+      background: #115e59;
+    }
+
+    .btn-retry {
+      background: #d97706;
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+
+    .btn-retry:hover {
+      background: #b45309;
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: var(--text);
+      margin-top: 6px;
+    }
+
+    .progress-wrap {
+      margin-bottom: 18px;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .sentence-card {
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 22px 18px;
+      margin-bottom: 16px;
+      font-size: 1.15rem;
+      line-height: 1.75;
+      color: var(--text);
+    }
+
+    .prompt-tag {
+      font-weight: 700;
+      color: var(--primary);
+      background: var(--primary-light);
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 0.95rem;
+    }
+
+    .feedback {
+      display: none;
+      padding: 14px 16px;
+      border-radius: 12px;
+      margin-top: 14px;
+      font-size: 0.94rem;
+      line-height: 1.5;
+    }
+
+    .feedback.success {
+      background: var(--success-bg);
+      color: var(--success);
+      border: 1px solid #86efac;
+    }
+
+    .feedback.warn {
+      background: var(--warn-bg);
+      color: var(--warn);
+      border: 1px solid #fcd34d;
+    }
+
+    .feedback.error {
+      background: var(--error-bg);
+      color: var(--error);
+      border: 1px solid #fca5a5;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .receipt {
+      border: 2px dashed var(--primary);
+      background: #eff6ff;
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 18px;
+    }
+
+    .receipt-header {
+      text-align: center;
+      border-bottom: 1px solid #bfdbfe;
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+    }
+
+    .receipt-score {
+      font-size: 2.1rem;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1.1;
+    }
+
+    .receipt-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(30, 58, 138, 0.1);
+    }
+
+    .receipt-row:last-child {
+      border-bottom: none;
+    }
+
+    .review-list {
+      margin-top: 10px;
+      margin-bottom: 16px;
+      font-size: 0.9rem;
+    }
+
+    .review-item {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Verb & Auxiliary Lab</h1>
+      <span class="badge" id="headerBadge">Rondas de 5</span>
+    </div>
+
+    <!-- PANTALLA 1: INICIO -->
+    <div class="content" id="startScreen">
+      <div class="desc-box">
+        <strong>Entrenamiento aleatorio de verbos y auxiliares:</strong> Practicarás en bloques rápidos de <strong>5 oraciones al azar</strong>. Lee toda la oración para identificar el contexto temporal sin pistas resaltadas.
+      </div>
+
+      <ul class="rules-list">
+        <li>Si ves un verbo entre paréntesis, ej. <strong>(write)</strong>, escribe el verbo conjugado completo (incluyendo auxiliares como <em>have, has, am, is, are, didn't, going to</em> si el contexto lo pide).</li>
+        <li>Si ves <strong>(auxiliar)</strong>, escribe únicamente el auxiliar que falta al inicio o en la pregunta (<em>did, have, has, am, is, are</em>).</li>
+        <li>Puedes completar varias rondas seguidas para dominar los 40 verbos.</li>
+      </ul>
+
+      <div class="form-group">
+        <label for="studentName">Tu nombre completo:</label>
+        <input type="text" id="studentName" placeholder="Escribe tu nombre y apellidos..." autocomplete="name" />
+      </div>
+
+      <button class="btn btn-primary" onclick="startSession()">Iniciar Ronda 1 (5 oraciones)</button>
+    </div>
+
+    <!-- PANTALLA 2: EJERCICIO -->
+    <div class="content hidden" id="quizScreen">
+      <div class="progress-wrap">
+        <div class="progress-meta">
+          <span id="progressText">Ronda 1 • Oración 1 de 5</span>
+          <span id="scoreText">Puntos ronda: 0</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <div class="sentence-card" id="sentenceBox"></div>
+
+      <div class="form-group">
+        <label for="answerInput" id="inputLabel">Escribe tu respuesta:</label>
+        <input
+          type="text"
+          id="answerInput"
+          placeholder="Escribe aquí..."
+          autocapitalize="none"
+          autocorrect="off"
+          spellcheck="false"
+          autocomplete="off"
+        />
+      </div>
+
+      <button class="btn btn-primary" id="checkBtn" onclick="checkAnswer()">Revisar respuesta</button>
+      <button class="btn btn-primary hidden" id="nextBtn" onclick="nextQuestion()">Siguiente →</button>
+
+      <div class="feedback" id="feedbackBox"></div>
+    </div>
+
+    <!-- PANTALLA 3: RESUMEN DE RONDA -->
+    <div class="content hidden" id="resultScreen">
+      <div class="receipt">
+        <div class="receipt-header">
+          <div style="font-size: 0.85rem; font-weight: 700; color: var(--primary); text-transform: uppercase;" id="roundSummaryTitle">
+            Resumen de Ronda 1
+          </div>
+          <div class="receipt-score" id="roundScoreDisplay">0 / 5</div>
+          <div style="font-size: 0.9rem; color: var(--muted); margin-top: 4px;" id="cumulativeDisplay">
+            Acumulado total: 0 pts en 1 ronda
+          </div>
+        </div>
+
+        <div class="receipt-row">
+          <span><strong>Estudiante:</strong></span>
+          <span id="resName">-</span>
+        </div>
+        <div class="receipt-row">
+          <span><strong>Rondas completadas:</strong></span>
+          <span id="resRounds">1</span>
+        </div>
+        <div class="receipt-row">
+          <span><strong>Fecha y hora:</strong></span>
+          <span id="resTime">-</span>
+        </div>
+        <div class="receipt-row">
+          <span><strong>Código de sesión:</strong></span>
+          <span id="resCode" style="font-family: monospace; font-weight: 700;">-</span>
+        </div>
+      </div>
+
+      <button class="btn btn-retry hidden" id="retryMissedBtn" onclick="startRedemption()">
+        🔁 Repetir las que fallé en esta ronda
+      </button>
+
+      <button class="btn btn-teal" onclick="startNewRound()">
+        🎲 Siguiente ronda de 5 (Nuevos verbos)
+      </button>
+
+      <div id="mistakesSection" class="hidden" style="margin-top: 14px;">
+        <h3 style="font-size: 1rem; margin-bottom: 6px;">Oraciones pendientes de esta ronda:</h3>
+        <div class="review-list" id="reviewList"></div>
+      </div>
+
+      <button class="btn btn-secondary" onclick="location.reload()">Reiniciar desde cero</button>
+    </div>
+  </div>
+
+  <script>
+    // Banco de 50 reactivos que cubre los 40 verbos (25 irregulares + 15 regulares) y auxiliares clave
+    const questionBank = [
+      // --- SIMPLE PAST AFFIRMATIVE (SP_AFF) ---
+      { id: 1, cat: "SP_AFF", before: "My brother", tag: "write", after: "three long reports last month.", tense: "Simple Past", subject: "sing", isAux: false, accepted: ["wrote"], display: "wrote" },
+      { id: 2, cat: "SP_AFF", before: "When I was ten years old, I", tag: "break", after: "my left arm playing soccer.", tense: "Simple Past", subject: "I", isAux: false, accepted: ["broke"], display: "broke" },
+      { id: 3, cat: "SP_AFF", before: "Our neighbor", tag: "drive", after: "all night to reach the coast yesterday.", tense: "Simple Past", subject: "sing", isAux: false, accepted: ["drove"], display: "drove" },
+      { id: 4, cat: "SP_AFF", before: "The players", tag: "feel", after: "exhausted after the championship match.", tense: "Simple Past", subject: "plur", isAux: false, accepted: ["felt"], display: "felt" },
+      { id: 5, cat: "SP_AFF", before: "The manager", tag: "give", after: "clear instructions before the shift started.", tense: "Simple Past", subject: "sing", isAux: false, accepted: ["gave"], display: "gave" },
+      { id: 6, cat: "SP_AFF", before: "We", tag: "have", after: "a great dinner at a small restaurant two nights ago.", tense: "Simple Past", subject: "plur", isAux: false, accepted: ["had"], display: "had" },
+      { id: 7, cat: "SP_AFF", before: "I", tag: "lose", after: "my house keys on the bus yesterday afternoon.", tense: "Simple Past", subject: "I", isAux: false, accepted: ["lost"], display: "lost" },
+      { id: 8, cat: "SP_AFF", before: "My roommate", tag: "take", after: "the wrong train during rush hour.", tense: "Simple Past", subject: "sing", isAux: false, accepted: ["took"], display: "took" },
+      { id: 9, cat: "SP_AFF", before: "Two volunteers", tag: "assist", after: "the coordinator during the conference.", tense: "Simple Past", subject: "plur", isAux: false, accepted: ["assisted"], display: "assisted" },
+      { id: 10, cat: "SP_AFF", before: "Everyone", tag: "enjoy", after: "the outdoor concert last weekend.", tense: "Simple Past", subject: "sing", isAux: false, accepted: ["enjoyed"], display: "enjoyed" },
+      { id: 11, cat: "SP_AFF", before: "The committee", tag: "plan", after: "the whole festival six months ago.", tense: "Simple Past", subject: "sing", isAux: false, accepted: ["planned"], display: "planned" },
+      { id: 12, cat: "SP_AFF", before: "Our band", tag: "play", after: "at a local café last Friday night.", tense: "Simple Past", subject: "sing", isAux: false, accepted: ["played"], display: "played" },
+      { id: 13, cat: "SP_AFF", before: "She", tag: "study", after: "architecture in Guadalajara from 2018 to 2022.", tense: "Simple Past", subject: "sing3", isAux: false, accepted: ["studied"], display: "studied" },
+      { id: 14, cat: "SP_AFF", before: "The stadium", tag: "be", after: "completely full during the final game.", tense: "Simple Past", subject: "sing3", isAux: false, accepted: ["was"], display: "was" },
+
+      // --- SIMPLE PAST AUXILIARY & NEGATIVE: DID / DIDN'T (SP_AUX) ---
+      { id: 15, cat: "SP_AUX", before: "", tag: "auxiliar", after: "you see the announcement on the board yesterday?", tense: "Simple Past (Pregunta)", subject: "plur", isAux: true, accepted: ["did"], display: "Did" },
+      { id: 16, cat: "SP_AUX", before: "", tag: "auxiliar", after: "the technician repair the projector last morning?", tense: "Simple Past (Pregunta)", subject: "sing3", isAux: true, accepted: ["did"], display: "Did" },
+      { id: 17, cat: "SP_AUX", before: "", tag: "auxiliar", after: "she feel better after resting last night?", tense: "Simple Past (Pregunta)", subject: "sing3", isAux: true, accepted: ["did"], display: "Did" },
+      { id: 18, cat: "SP_AUX", before: "My cousins", tag: "not / come", after: "to the family reunion last Sunday.", tense: "Simple Past (Negativo)", subject: "plur", isAux: false, accepted: ["didn't come", "did not come"], display: "didn't come / did not come" },
+      { id: 19, cat: "SP_AUX", before: "They", tag: "not / go", after: "to the beach because it rained all weekend.", tense: "Simple Past (Negativo)", subject: "plur", isAux: false, accepted: ["didn't go", "did not go"], display: "didn't go / did not go" },
+      { id: 20, cat: "SP_AUX", before: "Why", tag: "auxiliar", after: "you choose that topic for your essay yesterday?", tense: "Simple Past (Pregunta)", subject: "plur", isAux: true, accepted: ["did"], display: "did" },
+
+      // --- PRESENT PERFECT: HAVE / HAS + PAST PARTICIPLE (PP) ---
+      { id: 21, cat: "PP", before: "She", tag: "buy", after: "a new laptop for her classes this week.", tense: "Present Perfect", subject: "sing3", isAux: false, accepted: ["has bought", "'s bought"], display: "has bought" },
+      { id: 22, cat: "PP", before: "We", tag: "choose", after: "the best date for our group presentation already.", tense: "Present Perfect", subject: "plur", isAux: false, accepted: ["have chosen", "'ve chosen"], display: "have chosen" },
+      { id: 23, cat: "PP", before: "I", tag: "not / drink", after: "any coffee yet today.", tense: "Present Perfect", subject: "I", isAux: false, accepted: ["haven't drunk", "have not drunk"], display: "haven't drunk / have not drunk" },
+      { id: 24, cat: "PP", before: "My friend", tag: "eat", after: "exotic food in three different countries.", tense: "Present Perfect", subject: "sing3", isAux: false, accepted: ["has eaten", "'s eaten"], display: "has eaten" },
+      { id: 25, cat: "PP", before: "The researchers", tag: "find", after: "a reliable solution to the problem.", tense: "Present Perfect", subject: "plur", isAux: false, accepted: ["have found", "'ve found"], display: "have found" },
+      { id: 26, cat: "PP", before: "", tag: "auxiliar", after: "you ever flown in a small airplane?", tense: "Present Perfect (Pregunta)", subject: "plur", isAux: true, accepted: ["have"], display: "Have" },
+      { id: 27, cat: "PP", before: "He", tag: "keep", after: "all his childhood notebooks in a wooden box.", tense: "Present Perfect", subject: "sing3", isAux: false, accepted: ["has kept", "'s kept"], display: "has kept" },
+      { id: 28, cat: "PP", before: "Our team", tag: "meet", after: "with the advisor twice this semester.", tense: "Present Perfect", subject: "sing3", isAux: false, accepted: ["has met", "'s met"], display: "has met" },
+      { id: 29, cat: "PP", before: "The director", tag: "speak", after: "to all the new students already.", tense: "Present Perfect", subject: "sing3", isAux: false, accepted: ["has spoken", "'s spoken"], display: "has spoken" },
+      { id: 30, cat: "PP", before: "She", tag: "decide", after: "to apply for an international scholarship.", tense: "Present Perfect", subject: "sing3", isAux: false, accepted: ["has decided", "'s decided"], display: "has decided" },
+      { id: 31, cat: "PP", before: "My roommate", tag: "finish", after: "the final draft of the project already.", tense: "Present Perfect", subject: "sing3", isAux: false, accepted: ["has finished", "'s finished"], display: "has finished" },
+      { id: 32, cat: "PP", before: "They", tag: "learn", after: "a lot of practical skills since August.", tense: "Present Perfect", subject: "plur", isAux: false, accepted: ["have learned", "'ve learned", "have learnt", "'ve learnt"], display: "have learned" },
+      { id: 33, cat: "PP", before: "My uncle", tag: "live", after: "in Canada for more than ten years.", tense: "Present Perfect", subject: "sing3", isAux: false, accepted: ["has lived", "'s lived"], display: "has lived" },
+      { id: 34, cat: "PP", before: "Our instructor", tag: "work", after: "at this university since 2019.", tense: "Present Perfect", subject: "sing3", isAux: false, accepted: ["has worked", "'s worked"], display: "has worked" },
+      { id: 35, cat: "PP", before: "", tag: "auxiliar", after: "your sister ever visited the museums in Mexico City?", tense: "Present Perfect (Pregunta)", subject: "sing3", isAux: true, accepted: ["has"], display: "Has" },
+
+      // --- PRESENT CONTINUOUS: AM / IS / ARE + -ING (PC) ---
+      { id: 36, cat: "PC", before: "Be quiet! The students", tag: "do", after: "a listening exercise right now.", tense: "Present Continuous", subject: "plur", isAux: false, accepted: ["are doing", "'re doing"], display: "are doing" },
+      { id: 37, cat: "PC", before: "Put on a jacket—it", tag: "get", after: "really cold outside at the moment.", tense: "Present Continuous", subject: "sing3", isAux: false, accepted: ["is getting", "'s getting"], display: "is getting" },
+      { id: 38, cat: "PC", before: "Look! The chef", tag: "make", after: "fresh tortillas in the kitchen right now.", tense: "Present Continuous", subject: "sing3", isAux: false, accepted: ["is making", "'s making"], display: "is making" },
+      { id: 39, cat: "PC", before: "The students", tag: "read", after: "an article about renewable energy in class today.", tense: "Present Continuous", subject: "plur", isAux: false, accepted: ["are reading", "'re reading"], display: "are reading" },
+      { id: 40, cat: "PC", before: "At this second, the author", tag: "write", after: "the last chapter of the novel.", tense: "Present Continuous", subject: "sing3", isAux: false, accepted: ["is writing", "'s writing"], display: "is writing" },
+      { id: 41, cat: "PC", before: "We", tag: "clean", after: "the laboratory after our chemistry experiment.", tense: "Present Continuous", subject: "plur", isAux: false, accepted: ["are cleaning", "'re cleaning"], display: "are cleaning" },
+      { id: 42, cat: "PC", before: "My friends", tag: "hike", after: "up the mountain trail this morning.", tense: "Present Continuous", subject: "plur", isAux: false, accepted: ["are hiking", "'re hiking"], display: "are hiking" },
+      { id: 43, cat: "PC", before: "The organizers", tag: "plan", after: "the next academic symposium these days.", tense: "Present Continuous", subject: "plur", isAux: false, accepted: ["are planning", "'re planning"], display: "are planning" },
+      { id: 44, cat: "PC", before: "Our team leader", tag: "prepare", after: "the slides for today's meeting.", tense: "Present Continuous", subject: "sing3", isAux: false, accepted: ["is preparing", "'s preparing"], display: "is preparing" },
+      { id: 45, cat: "PC", before: "Right now, we", tag: "study", after: "for our upcoming final presentations.", tense: "Present Continuous", subject: "plur", isAux: false, accepted: ["are studying", "'re studying"], display: "are studying" },
+      { id: 46, cat: "PC", before: "", tag: "auxiliar", after: "your classmates practicing in the auditorium right now?", tense: "Present Continuous (Pregunta)", subject: "plur", isAux: true, accepted: ["are"], display: "Are" },
+
+      // --- FUTURE (GOING TO) & AUXILIARY CONTRAST (FUT) ---
+      { id: 47, cat: "FUT", before: "Next semester, my tutor", tag: "help", after: "me organize my thesis schedule.", tense: "Future (be going to)", subject: "sing3", isAux: false, accepted: ["is going to help", "'s going to help", "will help", "'ll help"], display: "is going to help" },
+      { id: 48, cat: "FUT", before: "Next summer, I", tag: "visit", after: "my grandparents in Sonora.", tense: "Future (be going to)", subject: "I", isAux: false, accepted: ["am going to visit", "'m going to visit", "will visit", "'ll visit"], display: "am going to visit" },
+      { id: 49, cat: "FUT", before: "", tag: "auxiliar", after: "you going to attend the workshop tomorrow afternoon?", tense: "Future (be going to)", subject: "plur", isAux: true, accepted: ["are"], display: "Are" },
+      { id: 50, cat: "FUT", before: "", tag: "auxiliar", after: "they attending the international seminar this week?", tense: "Present Continuous (Pregunta)", subject: "plur", isAux: true, accepted: ["are"], display: "Are" }
+    ];
+
+    let usedIds = new Set();
+    let currentRoundDeck = [];
+    let currentIdx = 0;
+    let roundScore = 0;
+    let totalSessionScore = 0;
+    let roundNumber = 0;
+    let attempts = 0;
+    let isRedemptionMode = false;
+    let studentName = "";
+
+    function normalizeInput(str) {
+      return str
+        .trim()
+        .toLowerCase()
+        .replace(/[\u2018\u2019\u02BC]/g, "'")
+        .replace(/\s+/g, " ");
+    }
+
+    function shuffle(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function buildRoundOfFive() {
+      if (usedIds.size >= questionBank.length - 4) {
+        usedIds.clear();
+      }
+
+      const categories = ["SP_AFF", "SP_AUX", "PP", "PC", "FUT"];
+      const picked = [];
+
+      categories.forEach(cat => {
+        const available = shuffle(questionBank.filter(q => q.cat === cat && !usedIds.has(q.id)));
+        if (available.length > 0) {
+          const item = available[0];
+          picked.push({ ...item, status: "pending", lastUserAnswer: "" });
+          usedIds.add(item.id);
+        }
+      });
+
+      while (picked.length < 5) {
+        const remaining = shuffle(questionBank.filter(q => !usedIds.has(q.id)));
+        if (remaining.length === 0) break;
+        const item = remaining[0];
+        picked.push({ ...item, status: "pending", lastUserAnswer: "" });
+        usedIds.add(item.id);
+      }
+
+      return shuffle(picked);
+    }
+
+    function startSession() {
+      const nameInput = document.getElementById("studentName").value.trim();
+      if (!nameInput) {
+        alert("Por favor escribe tu nombre completo antes de comenzar.");
+        return;
+      }
+      studentName = nameInput;
+      roundNumber = 0;
+      totalSessionScore = 0;
+      startNewRound();
+    }
+
+    function startNewRound() {
+      roundNumber++;
+      roundScore = 0;
+      currentIdx = 0;
+      isRedemptionMode = false;
+      currentRoundDeck = buildRoundOfFive();
+
+      document.getElementById("startScreen").classList.add("hidden");
+      document.getElementById("resultScreen").classList.add("hidden");
+      document.getElementById("quizScreen").classList.remove("hidden");
+      document.getElementById("headerBadge").textContent = `Ronda ${roundNumber}`;
+      renderQuestion();
+    }
+
+    function startRedemption() {
+      const missed = currentRoundDeck.filter(q => q.status !== "ok" && q.status !== "recovered");
+      if (missed.length === 0) return;
+
+      currentRoundDeck = missed;
+      currentIdx = 0;
+      isRedemptionMode = true;
+
+      document.getElementById("resultScreen").classList.add("hidden");
+      document.getElementById("quizScreen").classList.remove("hidden");
+      document.getElementById("headerBadge").textContent = `Repaso Ronda ${roundNumber}`;
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const q = currentRoundDeck[currentIdx];
+      attempts = 0;
+
+      const labelPrefix = isRedemptionMode ? `Repaso R${roundNumber}` : `Ronda ${roundNumber}`;
+      document.getElementById("progressText").textContent = `${labelPrefix} • Oración ${currentIdx + 1} de ${currentRoundDeck.length}`;
+      document.getElementById("scoreText").textContent = `Puntos ronda: ${roundScore}`;
+      document.getElementById("progressFill").style.width = `${(currentIdx / currentRoundDeck.length) * 100}%`;
+
+      const prefixSpace = q.before ? `${q.before} ` : "";
+      document.getElementById("sentenceBox").innerHTML =
+        `${prefixSpace}__________ <span class="prompt-tag">(${q.tag})</span> ${q.after}`;
+
+      document.getElementById("inputLabel").textContent = q.isAux
+        ? "Escribe únicamente el auxiliar faltante:"
+        : "Escribe el verbo conjugado:";
+
+      const input = document.getElementById("answerInput");
+      input.value = "";
+      input.disabled = false;
+      input.focus();
+
+      const fb = document.getElementById("feedbackBox");
+      fb.style.display = "none";
+      fb.className = "feedback";
+
+      document.getElementById("checkBtn").classList.remove("hidden");
+      document.getElementById("nextBtn").classList.add("hidden");
+    }
+
+    function diagnoseError(userAns, q) {
+      // 1. Caso especial: reactivos donde solo se pide el auxiliar
+      if (q.isAux) {
+        if (userAns.split(" ").length > 1) {
+          return "Aquí solo debes escribir el auxiliar (una sola palabra, como did, have, has, am, is, are), porque el verbo principal ya está escrito en la oración.";
+        }
+        if (userAns === "had") {
+          return "'had' es para Past Perfect. Revisa si la pregunta habla de una experiencia de vida en Present Perfect (have/has) o de un hecho terminado en Simple Past (did).";
+        }
+        if (q.tense.includes("Simple Past")) {
+          return "Fíjate en la expresión de tiempo pasado (yesterday, last...) y en que el verbo principal está en forma base: necesitas el auxiliar 'did'.";
+        }
+        if (q.tense.includes("Present Perfect")) {
+          if (q.subject === "sing3" && userAns === "have") {
+            return "El sujeto es tercera persona singular (your sister), así que debes usar 'has' en lugar de 'have'.";
+          }
+          if (q.subject !== "sing3" && userAns === "has") {
+            return "Con 'you' o sujetos plurales debes usar 'have', nunca 'has'.";
+          }
+          return "El verbo principal está en Past Participle (participio pasado) y pregunta por experiencia de vida: usa 'have' o 'has'.";
+        }
+        if (q.tense.includes("Present Continuous") || q.tense.includes("Future")) {
+          if (userAns === "do" || userAns === "did") {
+            return "No uses 'do/did' cuando el verbo lleva terminación -ing o 'going to'. Usa el verbo 'to be' (am / is / are).";
+          }
+          return "Con acciones en progreso (-ing) o planes con 'going to', el auxiliar correcto es 'am', 'is' o 'are' según el sujeto.";
+        }
+      }
+
+      // 2. Uso de "had" en lugar de "have/has"
+      if (/^(had|hadn't)\b/.test(userAns) && q.tense.includes("Present Perfect")) {
+        return "Usaste 'had' (pasado), pero esta oración conecta con el presente o habla de experiencias actuales. Usa 'have' o 'has'.";
+      }
+
+      // 3. Error típico con "did / didn't" + verbo conjugado en pasado
+      if (/^(did|didn't|did not)\s+(went|came|saw|wrote|bought|broke|chose|drank|drove|ate|felt|found|flew|got|gave|had|kept|lost|made|met|spoke|took|studied|planned)\b/.test(userAns)) {
+        return "Cuando usas 'did' o 'didn't', el auxiliar ya marca el pasado, así que el verbo principal debe ir en forma base (sin conjugar).";
+      }
+
+      // 4. Sobrerregularización (-ed en verbos irregulares)
+      if (/\b(writed|buyed|goed|breaked|choosed|comed|doed|drinked|drived|eated|feeled|finded|flyed|getted|gived|haved|keeped|losed|maked|meeted|readed|seed|speaked|taked|beed)\b/.test(userAns)) {
+        return "Este verbo es irregular: no forma su pasado con terminación -ed. Revisa su forma irregular en la tabla.";
+      }
+
+      // 5. Ortografía de -ing y -ed
+      if (/(writeing|makeing|takeing|comeing|liveing|loseing|chooseing|driveing|giveing|prepareing|hikeing)/.test(userAns)) {
+        return "Regla de ortografía: cuando el verbo termina en -e muda (write, make, take, hike, prepare...), elimina la 'e' antes de agregar -ing.";
+      }
+      if (/(studing|studyed)/.test(userAns)) {
+        return "Regla de ortografía con 'study': conserva la 'y' en 'studying', y cámbiala por 'i' en 'studied'.";
+      }
+      if (/(planing|planed|geting)/.test(userAns)) {
+        return "Regla de ortografía (consonante-vocal-consonante): duplica la última consonante (planning, planned, getting).";
+      }
+
+      // 6. Verbo sin conjugar
+      const cleanBase = q.tag.replace("not / ", "").trim();
+      if (userAns === cleanBase || userAns === q.tag) {
+        return "Escribiste el verbo en su forma base sin conjugar. Lee toda la oración para identificar en qué tiempo ocurre la acción.";
+      }
+
+      // 7. Diagnósticos por tiempo verbal
+      if (q.tense.includes("Simple Past")) {
+        if (/^(have|has|'ve|'s|haven't|hasn't)\b/.test(userAns)) {
+          return "La oración ubica la acción en un momento pasado ya concluido. No uses have/has; usa Simple Past.";
+        }
+        if (q.tag.includes("not") && !/^(didn't|did not)\b/.test(userAns)) {
+          return "Para negar en Simple Past usa 'didn't' (o 'did not') seguido del verbo en su forma base.";
+        }
+        return "El contexto indica un hecho terminado en el pasado: usa Simple Past.";
+      }
+
+      if (q.tense.includes("Present Perfect")) {
+        const hasAux = /^(have|has|'ve|'s|haven't|hasn't)\b/.test(userAns);
+        if (!hasAux) {
+          return "Te falta el auxiliar del Present Perfect (have / has) antes del Past Participle.";
+        }
+        if (q.subject === "sing3" && /^(have|'ve|haven't)\b/.test(userAns)) {
+          return "Revisa el sujeto: es tercera persona singular (he/she/it), así que corresponde 'has' en lugar de 'have'.";
+        }
+        if ((q.subject === "plur" || q.subject === "I") && /^(has|'s|hasn't)\b/.test(userAns)) {
+          return "Con 'I' o sujetos plurales debes usar 'have' (o 'haven't'), nunca 'has'.";
+        }
+        if (/\b(wrote|went|broke|chose|drank|drove|ate|flew|gave|saw|spoke|took)\b/.test(userAns)) {
+          return "Usaste bien el auxiliar, pero después de have/has el verbo debe ir en Past Participle (tercera columna), no en Simple Past.";
+        }
+        return "Esta situación conecta con el presente o habla de experiencias sin fecha cerrada: usa have / has + Past Participle.";
+      }
+
+      if (q.tense.includes("Present Continuous")) {
+        const hasBe = /^(am|is|are|'m|'s|'re)\b/.test(userAns);
+        if (!hasBe) {
+          return "En Present Continuous necesitas el auxiliar 'to be' (am / is / are) antes del verbo con -ing.";
+        }
+        if (!userAns.endsWith("ing")) {
+          return "Después de am / is / are, el verbo principal debe llevar terminación -ing.";
+        }
+        if (q.subject === "plur" && /^(is|'s|am|'m)\b/.test(userAns)) {
+          return "El sujeto es plural: usa 'are' en lugar de 'is'.";
+        }
+        if (q.subject === "sing3" && /^(are|'re|am|'m)\b/.test(userAns)) {
+          return "El sujeto es tercera persona singular: usa 'is' en lugar de 'are'.";
+        }
+        return "La acción está ocurriendo en este momento o periodo actual: usa am / is / are + verbo-ing.";
+      }
+
+      if (q.tense.includes("Future")) {
+        return "El contexto señala un plan futuro (Next semester / Next summer): usa 'am / is / are going to + verbo base' (o 'will + verbo base').";
+      }
+
+      return "Lee nuevamente toda la oración para identificar el tiempo y el sujeto correcto.";
+    }
+
+    function checkAnswer() {
+      const inputEl = document.getElementById("answerInput");
+      const rawVal = inputEl.value;
+      const userAns = normalizeInput(rawVal);
+      const fb = document.getElementById("feedbackBox");
+      const q = currentRoundDeck[currentIdx];
+
+      if (!userAns) {
+        fb.className = "feedback warn";
+        fb.textContent = "Escribe tu respuesta antes de revisar.";
+        fb.style.display = "block";
+        return;
+      }
+
+      attempts++;
+      const isCorrect = q.accepted.includes(userAns);
+
+      if (isCorrect) {
+        if (!isRedemptionMode) {
+          const earned = attempts === 1 ? 1 : 0.5;
+          roundScore += earned;
+          totalSessionScore += earned;
+          q.status = attempts === 1 ? "ok" : "retry";
+          q.lastUserAnswer = rawVal.trim();
+
+          fb.className = "feedback success";
+          fb.innerHTML = attempts === 1
+            ? `✅ <strong>¡Correcto!</strong> Estructura aplicada: <strong>${q.tense}</strong>.`
+            : `✅ <strong>¡Bien corregido!</strong> (+0.5 pts). Estructura: <strong>${q.tense}</strong>.`;
+        } else {
+          if (q.status === "wrong") {
+            roundScore += 0.5;
+            totalSessionScore += 0.5;
+          }
+          q.status = "recovered";
+          fb.className = "feedback success";
+          fb.innerHTML = `✅ <strong>¡Recuperada!</strong> Dominaste esta estructura (<strong>${q.tense}</strong>).`;
+        }
+
+        document.getElementById("scoreText").textContent = `Puntos ronda: ${roundScore}`;
+        fb.style.display = "block";
+        finishQuestionUI();
+      } else {
+        const diagnostic = diagnoseError(userAns, q);
+        if (attempts === 1) {
+          fb.className = "feedback warn";
+          fb.innerHTML = `⚠️ <strong>Intento 1 de 2:</strong> ${diagnostic}<br><em>Analiza el comentario e inténtalo una vez más.</em>`;
+          fb.style.display = "block";
+          inputEl.focus();
+        } else {
+          q.lastUserAnswer = rawVal.trim();
+          if (!isRedemptionMode) {
+            q.status = "wrong";
+            fb.className = "feedback error";
+            fb.innerHTML = `❌ <strong>Incorrecto.</strong> ${diagnostic}<br><em>Queda pendiente para tu repaso al final de esta ronda.</em>`;
+          } else {
+            fb.className = "feedback error";
+            fb.innerHTML = `❌ <strong>Forma correcta:</strong> <code>${q.display}</code> (${q.tense}).<br>${diagnostic}`;
+          }
+          fb.style.display = "block";
+          finishQuestionUI();
+        }
+      }
+    }
+
+    function finishQuestionUI() {
+      document.getElementById("answerInput").disabled = true;
+      document.getElementById("checkBtn").classList.add("hidden");
+      const nextBtn = document.getElementById("nextBtn");
+      nextBtn.classList.remove("hidden");
+      nextBtn.textContent = currentIdx === currentRoundDeck.length - 1 ? "Ver resumen de ronda →" : "Siguiente →";
+    }
+
+    function nextQuestion() {
+      currentIdx++;
+      if (currentIdx < currentRoundDeck.length) {
+        renderQuestion();
+      } else {
+        showRoundSummary();
+      }
+    }
+
+    function showRoundSummary() {
+      document.getElementById("quizScreen").classList.add("hidden");
+      document.getElementById("resultScreen").classList.remove("hidden");
+      document.getElementById("headerBadge").textContent = `Ronda ${roundNumber} lista`;
+
+      const now = new Date();
+      const timeStr = now.toLocaleString("es-MX", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+      const code = `VA-R${roundNumber}-${Math.round(totalSessionScore * 10)}-${now.getMinutes()}${now.getSeconds()}`;
+
+      document.getElementById("roundSummaryTitle").textContent = `Resumen de Ronda ${roundNumber}`;
+      document.getElementById("roundScoreDisplay").textContent = `${roundScore} / 5`;
+      document.getElementById("cumulativeDisplay").textContent =
+        `Acumulado total: ${totalSessionScore} / ${roundNumber * 5} pts (${roundNumber} ${roundNumber === 1 ? "ronda" : "rondas"})`;
+
+      document.getElementById("resName").textContent = studentName;
+      document.getElementById("resRounds").textContent = `${roundNumber} (${roundNumber * 5} oraciones practicadas)`;
+      document.getElementById("resTime").textContent = timeStr;
+      document.getElementById("resCode").textContent = code;
+
+      const toReview = currentRoundDeck.filter(q => q.status !== "ok" && q.status !== "recovered");
+      const retryBtn = document.getElementById("retryMissedBtn");
+      const mistakesSec = document.getElementById("mistakesSection");
+
+      if (toReview.length > 0) {
+        retryBtn.classList.remove("hidden");
+        retryBtn.textContent = `🔁 Repetir las que fallé en esta ronda (${toReview.length})`;
+
+        mistakesSec.classList.remove("hidden");
+        const listEl = document.getElementById("reviewList");
+        listEl.innerHTML = toReview.map(m => {
+          const prefixSpace = m.before ? `${m.before} ` : "";
+          return `
+            <div class="review-item">
+              <div style="margin-bottom:4px;">${prefixSpace}__________ <span class="prompt-tag">(${m.tag})</span> ${m.after}</div>
+              <div style="color:var(--error);">Tu respuesta anterior: <strong>${m.lastUserAnswer}</strong></div>
+            </div>
+          `;
+        }).join("");
+      } else {
+        retryBtn.classList.add("hidden");
+        mistakesSec.classList.add("hidden");
+      }
+    }
+
+    document.getElementById("answerInput").addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        if (!document.getElementById("checkBtn").classList.contains("hidden")) {
+          checkAnswer();
+        } else if (!document.getElementById("nextBtn").classList.contains("hidden")) {
+          nextQuestion();
+        }
+      }
+    });
+  </script>
+</body>
+</html>
